@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Exploration complète des enjeux de sécurité des intelligences artificielles.">
+    <meta name="offline-ready" content="true">
+    <title>SafeIntelligence – Sécurité des IA</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="stylesheet" href="css/styles.css">
+    <script defer src="js/app.js"></script>
+    <script defer src="js/sw-register.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">Passer au contenu</a>
+    <header class="header">
+        <div class="header__inner">
+            <a class="logo" href="index.html" aria-label="Accueil sécurité des IA">SafeIntelligence</a>
+            <nav class="nav" aria-label="Navigation principale">
+                <button class="nav__toggle" aria-expanded="false" aria-controls="nav-list">Menu</button>
+                <ul class="nav__list" id="nav-list">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="pages/alignment.html">Alignement</a></li>
+                    <li><a href="pages/interpretability.html">Interprétabilité</a></li>
+                    <li><a href="pages/governance.html">Gouvernance</a></li>
+                    <li><a href="pages/red-teaming.html">Red Teaming</a></li>
+                    <li><a href="pages/contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="hero">
+            <canvas id="particle-canvas" aria-hidden="true"></canvas>
+            <div class="hero__content">
+                <p class="hero__kicker">Sécurité des intelligences artificielles</p>
+                <h1 class="hero__title">Anticipez les dérives, protégez vos systèmes.</h1>
+                <p class="hero__subtitle">Une expérience hors ligne, élégante et exhaustive pour maîtriser les risques de vos IA.</p>
+                <a class="btn" href="#sections">Explorer</a>
+            </div>
+            <div class="hero__visual" aria-hidden="true">
+                <div class="hero__visual-glow"></div>
+            </div>
+        </section>
+
+        <section class="section section--grid reveal" id="sections" aria-labelledby="overview-title">
+            <div class="section__header">
+                <h2 id="overview-title">Un panorama complet des risques</h2>
+                <p>Découvrez 24 domaines clés pour renforcer la sécurité de vos systèmes d'intelligence artificielle.</p>
+            </div>
+            <div class="topics-grid" role="list">
+                <a class="topic-card" role="listitem" href="pages/alignment.html">
+                    <h3>Alignement</h3>
+                    <p>Encadrez les objectifs des modèles pour qu'ils respectent vos contraintes.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/interpretability.html">
+                    <h3>Interprétabilité</h3>
+                    <p>Rendez vos modèles lisibles, auditables et dignes de confiance.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/scheming.html">
+                    <h3>Comportements stratégiques</h3>
+                    <p>Identifiez les actions opportunistes et prévoyez des garde-fous.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/robustness.html">
+                    <h3>Robustesse</h3>
+                    <p>Résistez aux perturbations et attaques adversariales.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/dataset-security.html">
+                    <h3>Sécurité des jeux de données</h3>
+                    <p>Protégez les données critiques contre la corruption et l'exfiltration.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/oversight.html">
+                    <h3>Supervision humaine</h3>
+                    <p>Impliquez l'humain dans les décisions cruciales avec des workflows efficaces.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/governance.html">
+                    <h3>Gouvernance</h3>
+                    <p>Structurez la responsabilité, la conformité et la transparence.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/threat-modeling.html">
+                    <h3>Modélisation des menaces</h3>
+                    <p>Anticipez les scénarios critiques pour mieux prioriser vos défenses.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/auditing.html">
+                    <h3>Audit des systèmes</h3>
+                    <p>Pilotez les vérifications régulières de vos pipelines IA.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/transparency.html">
+                    <h3>Transparence</h3>
+                    <p>Communiquez les risques sans compromettre la sécurité.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/monitoring.html">
+                    <h3>Surveillance continue</h3>
+                    <p>Détectez en temps réel les dérives comportementales.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/incident-response.html">
+                    <h3>Réponse aux incidents</h3>
+                    <p>Préparez vos équipes à intervenir rapidement et efficacement.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/adversarial-learning.html">
+                    <h3>Apprentissage adversarial</h3>
+                    <p>Renforcez vos modèles grâce à des scénarios d'attaque simulés.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/differential-privacy.html">
+                    <h3>Confidentialité différentielle</h3>
+                    <p>Garantissez la protection des données sensibles.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/secure-architecture.html">
+                    <h3>Architecture sécurisée</h3>
+                    <p>Concevez des pipelines fiables de bout en bout.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/human-in-the-loop.html">
+                    <h3>Humain dans la boucle</h3>
+                    <p>Combinez le jugement humain et la performance machine.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/policy.html">
+                    <h3>Politiques internes</h3>
+                    <p>Institutionnalisez la culture de sécurité IA.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/evaluation.html">
+                    <h3>Évaluations de sécurité</h3>
+                    <p>Mesurez la maturité de vos dispositifs de protection.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/red-teaming.html">
+                    <h3>Red Teaming IA</h3>
+                    <p>Débusquez les failles avant les attaquants.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/ethics.html">
+                    <h3>Éthique et sécurité</h3>
+                    <p>Harmonisez objectifs responsables et impératifs de sûreté.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/supply-chain.html">
+                    <h3>Chaîne d'approvisionnement</h3>
+                    <p>Sécurisez vos dépendances logicielles et matérielles.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/hardware-security.html">
+                    <h3>Sécurité matérielle</h3>
+                    <p>Protégez les composants critiques et contrôlez les accès.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/fail-safes.html">
+                    <h3>Mécanismes de repli</h3>
+                    <p>Préparez des plans de contingence et des arrêts maîtrisés.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/regulation.html">
+                    <h3>Régulation</h3>
+                    <p>Anticipez les nouvelles obligations internationales.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/contact.html">
+                    <h3>Contact</h3>
+                    <p>Collaborez avec notre équipe sécurité dédiée.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="section reveal" aria-labelledby="method-title">
+            <div class="section__header">
+                <h2 id="method-title">Méthodologie intégrée</h2>
+                <p>Une feuille de route structurée pour transformer vos engagements de sécurité en actions concrètes.</p>
+            </div>
+            <div class="timeline" role="list">
+                <article class="timeline__item" role="listitem">
+                    <h3>1. Diagnostic</h3>
+                    <p>Évaluez votre posture actuelle grâce à nos checklists interactives et grilles de maturité.</p>
+                </article>
+                <article class="timeline__item" role="listitem">
+                    <h3>2. Expérimentation</h3>
+                    <p>Priorisez les tests, red teamings et évaluations selon vos cas d'usage critiques.</p>
+                </article>
+                <article class="timeline__item" role="listitem">
+                    <h3>3. Déploiement</h3>
+                    <p>Installez des contrôles continus, automatisez les alertes et formez les équipes.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section section--accent reveal" aria-labelledby="pwa-title">
+            <div class="section__header">
+                <h2 id="pwa-title">Une PWA conçue pour l'offline</h2>
+                <p>Installez l'application, profitez d'un chargement instantané et continuez vos explorations sans connexion.</p>
+            </div>
+            <div class="cta">
+                <p>L'icône de l'application apparaîtra dans votre lanceur après installation. Aucun suivi, aucune ressource distante.</p>
+                <a class="btn btn--ghost" href="manifest.json" download>Voir le manifest</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2024 SafeIntelligence. Conçu pour l'exploration hors ligne de la sécurité des IA.</p>
+    </footer>
+</body>
+</html>
