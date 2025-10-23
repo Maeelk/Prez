@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plateforme hors ligne élégante dédiée à la sécurité des IA : 25 domaines, méthodologies et outils pour anticiper les risques.">
+    <meta name="offline-ready" content="true">
+    <title>SafeIntelligence – Sécurité des IA</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+    <meta name="theme-color" content="#f5f7fb">
+    <link rel="stylesheet" href="css/styles.css">
+    <script defer src="js/page-data.js"></script>
+    <script defer src="js/app.js"></script>
+    <script defer src="js/sw-register.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">Passer au contenu</a>
+    <header class="header" data-sparkle>
+        <div class="header__inner">
+            <a class="logo" href="index.html" aria-label="Accueil sécurité des IA">SafeIntelligence</a>
+            <nav class="nav" aria-label="Navigation principale">
+                <button class="nav__toggle" aria-expanded="false" aria-controls="nav-list">Menu</button>
+                <ul class="nav__list" id="nav-list">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="pages/alignment.html">Alignement</a></li>
+                    <li><a href="pages/interpretability.html">Interprétabilité</a></li>
+                    <li><a href="pages/governance.html">Gouvernance</a></li>
+                    <li><a href="pages/red-teaming.html">Red Teaming</a></li>
+                    <li><a href="pages/contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="hero">
+        <canvas id="particle-canvas" aria-hidden="true"></canvas>
+        <div class="hero__content">
+            <p class="hero__kicker">Sécurité des intelligences artificielles</p>
+            <h1 class="hero__title">L'expérience hors ligne qui élève la résilience de vos IA.</h1>
+            <p class="hero__subtitle">Découvrez un parcours complet, élégant et opérationnel pour couvrir l'alignement, l'interprétabilité, la gouvernance et l'ensemble des disciplines critiques de la sécurité des IA.</p>
+            <div class="hero__cta">
+                <a class="btn" href="#sections">Explorer les domaines</a>
+                <button class="btn btn--ghost" data-scroll-target="#scenario">Composer une stratégie</button>
+            </div>
+            <ul class="badge-list" aria-label="Bénéfices clés">
+                <li>25 domaines d'expertise</li>
+                <li>Animations immersives</li>
+                <li>PWA 100% hors ligne</li>
+            </ul>
+        </div>
+        <div class="hero__visual" aria-hidden="true">
+            <div class="hero__visual-glow"></div>
+        </div>
+    </section>
+
+    <main id="main">
+        <section class="section section--grid reveal" id="sections" aria-labelledby="overview-title">
+            <div class="section__header">
+                <h2 id="overview-title">Un atlas raffiné des risques IA</h2>
+                <p>Nos 25 pages thématiques livrent une vision opérationnelle : cadrage stratégique, gouvernance, architecture, supervision et réponse aux incidents. Chaque sujet bénéficie d'illustrations génératives, de plans d'action et d'interactions guidées.</p>
+            </div>
+            <div class="topics-grid" role="list">
+                <a class="topic-card" role="listitem" href="pages/alignment.html">
+                    <h3>Alignement</h3>
+                    <p>Orchestrez des objectifs sûrs et contrôlables.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/interpretability.html">
+                    <h3>Interprétabilité</h3>
+                    <p>Exposez les décisions pour renforcer la confiance.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/scheming.html">
+                    <h3>Comportements stratégiques</h3>
+                    <p>Détectez les détours opportunistes et les dérives.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/robustness.html">
+                    <h3>Robustesse</h3>
+                    <p>Résistez aux perturbations et scénarios extrêmes.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/dataset-security.html">
+                    <h3>Sécurité des données</h3>
+                    <p>Préservez l'intégrité de vos jeux d'entraînement.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/oversight.html">
+                    <h3>Supervision humaine</h3>
+                    <p>Choregraphiez les boucles de validation critiques.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/governance.html">
+                    <h3>Gouvernance</h3>
+                    <p>Clarifiez rôles, contrôles et reporting.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/threat-modeling.html">
+                    <h3>Modélisation des menaces</h3>
+                    <p>Priorisez les efforts à forte valeur défensive.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/auditing.html">
+                    <h3>Audit des systèmes</h3>
+                    <p>Industrialisez la vérification des pipelines.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/transparency.html">
+                    <h3>Transparence</h3>
+                    <p>Partager sans trahir vos secrets industriels.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/monitoring.html">
+                    <h3>Surveillance continue</h3>
+                    <p>Captez les signaux faibles en temps réel.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/incident-response.html">
+                    <h3>Réponse aux incidents</h3>
+                    <p>Réagissez vite avec un plan orchestré.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/adversarial-learning.html">
+                    <h3>Apprentissage adversarial</h3>
+                    <p>Éprouvez vos modèles par le feu contrôlé.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/differential-privacy.html">
+                    <h3>Confidentialité différentielle</h3>
+                    <p>Formalisez la protection de chaque donnée.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/secure-architecture.html">
+                    <h3>Architecture sécurisée</h3>
+                    <p>Installez des garde-fous à chaque étage.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/human-in-the-loop.html">
+                    <h3>Humain dans la boucle</h3>
+                    <p>Composez des symbioses homme-machine efficaces.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/policy.html">
+                    <h3>Politiques internes</h3>
+                    <p>Diffusez une culture de sécurité unifiée.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/evaluation.html">
+                    <h3>Évaluations de sécurité</h3>
+                    <p>Mesurez la maturité et les progrès obtenus.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/red-teaming.html">
+                    <h3>Red Teaming IA</h3>
+                    <p>Dévoilez les failles avant l'adversaire.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/ethics.html">
+                    <h3>Éthique & sécurité</h3>
+                    <p>Alliez ambitions responsables et rigueur.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/supply-chain.html">
+                    <h3>Chaîne d'approvisionnement</h3>
+                    <p>Verrouillez dépendances, packages et APIs.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/hardware-security.html">
+                    <h3>Sécurité matérielle</h3>
+                    <p>Gardez le contrôle sur les accélérateurs IA.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/fail-safes.html">
+                    <h3>Mécanismes de repli</h3>
+                    <p>Préparez des arrêts gracieux et contrôlés.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/regulation.html">
+                    <h3>Régulation</h3>
+                    <p>Devancez les cadres internationaux.</p>
+                </a>
+                <a class="topic-card" role="listitem" href="pages/contact.html">
+                    <h3>Contact</h3>
+                    <p>Construisons votre programme sur mesure.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="section reveal" aria-labelledby="craft-title" data-sparkle>
+            <div class="section__header">
+                <h2 id="craft-title">Des parcours chorégraphiés pour chaque enjeu</h2>
+                <p>Animations discrètes, contrastes maîtrisés et contenus interactifs guident vos équipes à travers les décisions clés : cadrage, prévention, détection et réponse. L'expérience s'adapte à toutes les tailles d'écran sans dépendance à un réseau.</p>
+            </div>
+            <div class="gallery" aria-label="Illustrations génératives">
+                <figure class="gallery__item procedural-art">
+                    <img data-art="alignment" alt="Illustration générée sur l'alignement des IA">
+                    <figcaption class="gallery__legend">Alignement : des gradients doux symbolisent la convergence contrôlée des objectifs.</figcaption>
+                </figure>
+                <figure class="gallery__item procedural-art">
+                    <img data-art="robustness" alt="Illustration générée sur la robustesse des modèles">
+                    <figcaption class="gallery__legend">Robustesse : superposition de halos pour visualiser la résilience multicouche.</figcaption>
+                </figure>
+                <figure class="gallery__item procedural-art">
+                    <img data-art="governance" alt="Illustration générée sur la gouvernance IA">
+                    <figcaption class="gallery__legend">Gouvernance : architecture claire et hiérarchisée, inspirée des organigrammes premium.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section reveal" id="scenario" aria-labelledby="scenario-title">
+            <div class="section__header">
+                <h2 id="scenario-title">Projetez votre feuille de route</h2>
+                <p>Utilisez le curseur pour découvrir les actions prioritaires à chaque étape de votre programme de sécurité IA. Les scénarios sont inspirés des pratiques que nous détaillons dans chacune des pages thématiques.</p>
+            </div>
+            <div class="scenario" data-scenario>
+                <div class="scenario__label">
+                    <span>Phase du programme</span>
+                    <span data-scenario-label>Exploration</span>
+                </div>
+                <input type="range" min="0" max="3" value="0" data-scenario-range aria-label="Sélectionnez la phase de votre programme">
+                <div class="scenario__output" aria-live="polite">
+                    <h3 data-scenario-title>Cartographier les risques</h3>
+                    <p data-scenario-text>Définissez les objectifs critiques, cadrez les cas d'usage et cartographiez les scénarios adverses pour éclairer vos priorités.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section reveal" aria-labelledby="insight-title">
+            <div class="section__header">
+                <h2 id="insight-title">Signaux à suivre dans vos évaluations</h2>
+                <p>Les équipes peuvent activer ces déclencheurs d'analyse pour identifier rapidement un besoin d'audit ou de remédiation. Sélectionnez un signal pour découvrir nos recommandations.</p>
+            </div>
+            <div class="insight" data-insights-home>
+                <div class="insight__tabs" role="tablist" aria-label="Signaux de sécurité">
+                    <button type="button" role="tab" aria-selected="true" data-home-insight="alignement">Alignement</button>
+                    <button type="button" role="tab" aria-selected="false" data-home-insight="interpretabilite">Interprétabilité</button>
+                    <button type="button" role="tab" aria-selected="false" data-home-insight="robustesse">Robustesse</button>
+                    <button type="button" role="tab" aria-selected="false" data-home-insight="gouvernance">Gouvernance</button>
+                </div>
+                <div class="insight__panel" data-home-insight-panel aria-live="polite">
+                    Un modèle modifie ses réponses selon le type d'utilisateur ? Mesurez l'alignement comportemental à l'aide de jeux de tests scénarisés et enclenchez des revues humaines.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2024 SafeIntelligence – Programme de résilience IA hors ligne.</p>
+        <p>Service worker cache-first, manifest PWA et animations 100% locales.</p>
+    </footer>
+</body>
+</html>

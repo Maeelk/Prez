@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cartographie, évaluations et contrôles de la supply chain IA.">
+    <meta name="offline-ready" content="true">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="icon" type="image/svg+xml" href="../assets/icons/icon.svg">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Chaîne d'approvisionnement IA – Sécurité des IA</title>
+    <script defer src="../js/page-data.js"></script>
+    <script defer src="../js/app.js"></script>
+    <script defer src="../js/sw-register.js"></script>
+</head>
+<body class="page" data-topic="supply-chain">
+    <a class="skip-link" href="#content">Aller au contenu</a>
+    <header class="header header--compact" data-sparkle>
+        <div class="header__inner">
+            <a class="logo" href="../index.html" aria-label="Accueil sécurité des IA">SafeIntelligence</a>
+            <nav class="nav" aria-label="Navigation principale">
+                <button class="nav__toggle" aria-expanded="false" aria-controls="nav-list">Menu</button>
+                <ul class="nav__list" id="nav-list">
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="../pages/alignment.html">Alignement</a></li>
+                <li><a href="../pages/interpretability.html">Interprétabilité</a></li>
+                <li><a href="../pages/governance.html">Gouvernance</a></li>
+                <li><a href="../pages/red-teaming.html">Red Teaming</a></li>
+                <li><a href="../pages/contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main id="content" class="page__main" data-topic="supply-chain">
+        <section class="page__hero reveal">
+            <div class="page__hero-text">
+                <p class="page__kicker" data-field="kicker">Dépendances maîtrisées</p>
+                <h1 class="page__title" data-field="title">Chaîne d'approvisionnement IA</h1>
+                <p class="page__subtitle" data-field="subtitle">Sécurisez vos dépendances logicielles, données et partenaires.</p>
+                <div class="page__cta">
+                    <button class="btn" type="button" data-scroll-target="#page-checklist">Aller aux points clés</button>
+                    <button class="btn btn--ghost" type="button" data-random-insight>Insight aléatoire</button>
+                </div>
+            </div>
+            <figure class="page__hero-figure">
+                <img class="page__illustration" data-art="supply-chain" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E" alt="Illustration générative évoquant un réseau de partenaires maîtrisé." loading="lazy">
+            </figure>
+        </section>
+        <section class="page__summary reveal" aria-label="Synthèse rapide">
+            <article class="summary-card">
+                <h2>Enjeux</h2>
+                <p data-field="challenge">Un fournisseur compromis peut propager une faille à l'ensemble de vos modèles.</p>
+            </article>
+            <article class="summary-card">
+                <h2>Approches</h2>
+                <p data-field="approach">Identifier, évaluer et surveiller chaque dépendance critique.</p>
+            </article>
+            <article class="summary-card">
+                <h2>Indicateur phare</h2>
+                <p data-field="indicator">Pourcentage de fournisseurs évalués selon vos critères de sécurité IA.</p>
+            </article>
+        </section>
+        <section class="page__narrative reveal" data-narrative aria-label="Itinéraire détaillé">
+            <div class="narrative-grid" data-narrative-grid></div>
+        </section>
+        <section class="page__interactive reveal" aria-labelledby="interactive-title">
+            <div class="page__interactive-header">
+                <h2 id="interactive-title">Itinéraire de sécurisation</h2>
+                <p data-field="interactiveIntro">La sécurité de la supply chain progresse avec des évaluations régulières et des plans de contingence.</p>
+            </div>
+            <div class="timeline">
+                <label for="timeline-range">Phase de maturité</label>
+                <input type="range" id="timeline-range" data-timeline-range min="0" max="0" value="0">
+                <div class="timeline__display">
+                    <h3 data-timeline-title></h3>
+                    <p data-timeline-text></p>
+                </div>
+            </div>
+            <div class="insight" aria-label="Signaux à surveiller">
+                <div class="insight__tabs" data-insight-tabs role="tablist"></div>
+                <div class="insight__panel" data-insight-display aria-live="polite"></div>
+                <button class="btn btn--ghost" type="button" data-random-insight>Surprendre-moi</button>
+            </div>
+        </section>
+        <section class="page__checklist reveal" id="page-checklist" aria-label="Points de contrôle prioritaires">
+            <h2>Points de contrôle prioritaires</h2>
+            <ul class="checklist" data-checklist></ul>
+        </section>
+        <section class="page__resources reveal" aria-label="Ressources associées">
+            <h2>Aller plus loin</h2>
+            <ul class="resource-list" data-resources></ul>
+        </section>
+        <noscript>
+            <p>Activez JavaScript pour profiter des contenus enrichis, des illustrations génératives et des interactions guidées.</p>
+        </noscript>
+    </main>
+    <footer class="footer">
+        <p>© 2024 SafeIntelligence. Programme de sécurité des IA hors ligne.</p>
+    </footer>
+</body>
+</html>
