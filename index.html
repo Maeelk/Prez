@@ -2,54 +2,1665 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Goat Survivors</title>
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#12141b" />
     <style>
       :root {
         color-scheme: dark;
-        font-family: 'Inter', 'Segoe UI', sans-serif;
-        background: #080b11;
-        color: #f6f6f6;
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        --fond: #07090f;
+        --panneau: rgba(10, 14, 24, 0.92);
+        --bord: rgba(255, 255, 255, 0.1);
+        --accent: #f7b32b;
       }
       body {
         margin: 0;
+        background: var(--fond);
+        color: #f6f6f6;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
       }
+      h1,
+      h2,
+      h3 {
+        margin: 0 0 0.5rem;
+        font-weight: 600;
+      }
+      p {
+        margin: 0.25rem 0;
+      }
+      button,
+      select,
+      input,
+      label {
+        font: inherit;
+      }
+      button {
+        background: var(--accent);
+        color: #130c00;
+        border: none;
+        border-radius: 999px;
+        padding: 0.6rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+      }
+      button.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #f6f6f6;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
       #game-root {
         flex: 1;
-        display: flex;
-        align-items: stretch;
-        justify-content: center;
         position: relative;
         overflow: hidden;
       }
       canvas {
         width: 100%;
         height: 100%;
+        display: block;
         touch-action: none;
       }
       .overlay {
         position: absolute;
         inset: 0;
+        pointer-events: none;
+        display: grid;
+        place-items: center;
+      }
+      .panel {
+        background: var(--panneau);
+        border: 1px solid var(--bord);
+        border-radius: 20px;
+        padding: 1.5rem;
+        max-width: min(640px, 90vw);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+        pointer-events: auto;
+      }
+      .grid {
+        display: grid;
+        gap: 0.75rem;
+      }
+      .grid.two {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
+      .hero-card {
+        padding: 1rem;
+        border-radius: 16px;
+        border: 1px solid transparent;
+        background: rgba(255, 255, 255, 0.04);
+        cursor: pointer;
+        transition: border 0.2s, background 0.2s;
+        text-align: left;
+      }
+      .hero-card[data-selected="true"] {
+        border-color: var(--accent);
+        background: rgba(247, 179, 43, 0.15);
+      }
+      .hidden {
+        display: none !important;
+      }
+      .hud {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
         display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+        font-size: 1rem;
+      }
+      .hud-row {
+        display: flex;
+        gap: 1rem;
         align-items: center;
-        justify-content: center;
+      }
+      .bar {
+        height: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 999px;
+        overflow: hidden;
+        flex: 1;
+      }
+      .bar-fill {
+        height: 100%;
+        background: var(--accent);
+      }
+      .notification {
+        position: absolute;
+        left: 50%;
+        top: 20%;
+        transform: translate(-50%, -50%);
+        background: rgba(10, 14, 24, 0.9);
+        border-radius: 16px;
+        padding: 0.75rem 1.25rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+      }
+      .notification.visible {
+        opacity: 1;
+        transform: translate(-50%, -60%);
+      }
+      .controls-hint {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        background: rgba(10, 14, 24, 0.8);
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        opacity: 0.7;
         pointer-events: none;
       }
-      .overlay > * {
-        pointer-events: auto;
+      .stick {
+        position: absolute;
+        bottom: 3rem;
+        left: 3rem;
+        width: 120px;
+        height: 120px;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .stick.visible {
+        opacity: 1;
+      }
+      .stick-thumb {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(247, 179, 43, 0.8);
+        transform: translate(-50%, -50%);
+      }
+      @media (max-width: 720px) {
+        .panel {
+          padding: 1.1rem;
+          border-radius: 16px;
+        }
+        .hud {
+          font-size: 0.9rem;
+        }
+        button {
+          width: 100%;
+        }
       }
     </style>
   </head>
   <body>
     <div id="game-root">
       <canvas id="game-canvas" width="1280" height="720"></canvas>
-      <div class="overlay" id="ui-layer"></div>
+      <div class="hud" id="hud" aria-live="polite"></div>
+      <div class="notification" id="notification"></div>
+      <div class="controls-hint">ZQSD / Flèches • Espace = Dash • P = Pause</div>
+      <div class="stick" id="stick">
+        <div class="stick-thumb" id="stick-thumb"></div>
+      </div>
+      <div class="overlay">
+        <div class="panel" id="menu-panel">
+          <h1>Goat Survivors 🐐</h1>
+          <p>Survivez 7 minutes face aux hordes et battez le high score local.</p>
+          <section>
+            <h2>Héros</h2>
+            <div class="grid two" id="hero-grid"></div>
+          </section>
+          <section>
+            <h2>Biomes</h2>
+            <div class="grid two" id="biome-grid"></div>
+          </section>
+          <section>
+            <h2>Options</h2>
+            <div class="grid">
+              <label><input type="checkbox" id="option-daltonisme" /> Mode daltonisme</label>
+              <label><input type="checkbox" id="option-performance" /> Mode performance</label>
+              <label>Taille interface <input type="range" id="option-ui" min="0.85" max="1.25" step="0.05" value="1" /></label>
+              <label>Volume global <input type="range" id="option-volume" min="0" max="1" step="0.05" value="0.6" /></label>
+            </div>
+          </section>
+          <section>
+            <h2>High score</h2>
+            <p id="highscore-text">0</p>
+            <button class="secondary" id="reset-score">Réinitialiser</button>
+          </section>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem;justify-content:center;">
+            <button id="start-button">Lancer la run (7:00)</button>
+          </div>
+        </div>
+        <div class="panel hidden" id="levelup-panel" role="dialog" aria-modal="true">
+          <h2>Niveau supérieur ! Choisissez un pouvoir</h2>
+          <div class="grid" id="levelup-options"></div>
+          <div style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;">
+            <button id="reroll-button" class="secondary">Reroll (0)</button>
+            <button id="banish-button" class="secondary">Bannir</button>
+            <button id="skip-button" class="secondary">Passer</button>
+          </div>
+        </div>
+        <div class="panel hidden" id="resume-panel" role="dialog" aria-modal="true">
+          <h2 id="resume-title">Fin de run</h2>
+          <div id="resume-body"></div>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem;justify-content:center;">
+            <button id="retry-button">Rejouer la même seed</button>
+            <button id="menu-button">Retour menu</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <script type="module" src="/src/main.ts"></script>
+    <script>
+      const HEROES = [
+        {
+          id: "alpine",
+          nom: "Chèvre Alpine",
+          description: "Polyvalente avec gain d'XP accru.",
+          emoji: "🐐",
+          stats: { pv: 110, vitesse: 140, xp: 0.1, degats: 0.1, cadence: 0, aimant: 0.1 },
+        },
+        {
+          id: "neiges",
+          nom: "Chèvre des Neiges",
+          description: "Contrôle : gèle périodiquement les ennemis proches.",
+          emoji: "🐏",
+          stats: { pv: 90, vitesse: 110, xp: 0, degats: 0, cadence: 0, aimant: 0.25 },
+        },
+        {
+          id: "bouc",
+          nom: "Bouc de Combat",
+          description: "Beaucoup de PV, dégâts de mêlée renforcés.",
+          emoji: "🐐",
+          stats: { pv: 150, vitesse: 120, xp: 0, degats: 0.25, cadence: -0.05, aimant: -0.05 },
+        },
+        {
+          id: "electrique",
+          nom: "Chèvre Électrique",
+          description: "Verre à canon ultra rapide avec étincelles.",
+          emoji: "⚡🐐",
+          stats: { pv: 80, vitesse: 175, xp: 0, degats: 0.15, cadence: 0.12, aimant: 0 },
+        },
+      ];
+
+      const PASSIVES = [
+        { id: "degats", nom: "Cornes Trempées", emoji: "🪓", description: "+15 % dégâts.", effet: (j) => (j.bonusDegats += 0.15) },
+        { id: "cadence", nom: "Cloche Rythmique", emoji: "🔔", description: "+12 % cadence.", effet: (j) => (j.bonusCadence += 0.12) },
+        { id: "portee", nom: "Cor des Alpes", emoji: "📯", description: "+18 % portée.", effet: (j) => (j.bonusPortee += 0.18) },
+        { id: "aimant", nom: "Fromage AOP", emoji: "🧀", description: "+25 % aimant XP.", effet: (j) => (j.bonusAimant += 0.25) },
+        { id: "hp", nom: "Laine Blindée", emoji: "🧶", description: "+30 PV max.", effet: (j) => ((j.pvMax += 30), (j.pv += 30)) },
+        { id: "vitesse", nom: "Sabots Nitro", emoji: "🔥", description: "+15 % vitesse.", effet: (j) => (j.bonusVitesse += 0.15) },
+        { id: "crit", nom: "Cornes Aiguisées", emoji: "🗡️", description: "+10 % critique.", effet: (j) => (j.bonusCrit += 0.1) },
+        { id: "dash", nom: "Clochette Agile", emoji: "🎐", description: "+1 charge de dash.", effet: (j) => (j.dashMax += 1) },
+      ];
+      const WEAPONS = [
+        {
+          id: "mario",
+          nom: "Boule de Feu Mario",
+          emoji: "🔥",
+          description: "Projectile rebondissant.",
+          baseCooldown: 1.4,
+          niveaux: [
+            { degats: 6 },
+            { projectiles: 1 },
+            { cadence: -0.15 },
+            { degats: 4 },
+            { vitesse: 1 },
+          ],
+          lancer(game, arme, joueur) {
+            const vitesse = 260 + (arme.vitesseBonus || 0) * 40;
+            const angle = joueur.direction ?? game.rng.range(-Math.PI, Math.PI);
+            game.creerProjectile({
+              emoji: "🔥",
+              x: joueur.x,
+              y: joueur.y,
+              vx: Math.cos(angle) * vitesse,
+              vy: Math.sin(angle) * vitesse,
+              rayon: 16,
+              degats: arme.degats * game.multDegats(joueur),
+              duree: 2.8,
+              rebond: 1,
+            });
+          },
+        },
+        {
+          id: "boomerang",
+          nom: "Boomerang Zelda",
+          emoji: "🌀",
+          description: "Va et revient.",
+          baseCooldown: 1.6,
+          niveaux: [
+            { degats: 5 },
+            { portee: 0.2 },
+            { projectiles: 1 },
+            { cadence: -0.2 },
+            { degats: 3 },
+          ],
+          lancer(game, arme, joueur) {
+            const vitesse = 220;
+            const base = joueur.direction ?? 0;
+            const count = 1 + arme.projectiles;
+            for (let i = 0; i < count; i++) {
+              const angle = base + (i - (count - 1) / 2) * 0.35;
+              game.creerProjectile({
+                emoji: "🌀",
+                x: joueur.x,
+                y: joueur.y,
+                vx: Math.cos(angle) * vitesse,
+                vy: Math.sin(angle) * vitesse,
+                rayon: 14,
+                degats: arme.degats * game.multDegats(joueur),
+                duree: 2.2,
+                retour: true,
+                range: 260 + arme.portee * 120,
+              });
+            }
+          },
+        },
+        {
+          id: "anneaux",
+          nom: "Anneaux Sonic",
+          emoji: "💫",
+          description: "Orbes orbitaux qui attirent l'XP.",
+          baseCooldown: 7,
+          niveaux: [
+            { projectiles: 1 },
+            { portee: 0.25 },
+            { cadence: -0.5 },
+            { aimant: 0.2 },
+            { projectiles: 1 },
+          ],
+          lancer(game, arme, joueur) {
+            const count = 2 + arme.projectiles;
+            const rayon = 80 + arme.portee * 100;
+            for (let i = 0; i < count; i++) {
+              const angle = (Math.PI * 2 * i) / count;
+              game.creerZone({
+                emoji: "💫",
+                x: joueur.x + Math.cos(angle) * rayon,
+                y: joueur.y + Math.sin(angle) * rayon,
+                rayon: 28,
+                degats: (arme.degats * 0.6 + 2) * game.multDegats(joueur),
+                duree: 3,
+                suit: true,
+                angle,
+                rayonOrbit: rayon,
+              });
+            }
+            joueur.aimantTemp = Math.max(joueur.aimantTemp, 4);
+          },
+        },
+        {
+          id: "spindash",
+          nom: "Spin Dash",
+          emoji: "💥",
+          description: "Dash offensif invincible.",
+          baseCooldown: 6,
+          niveaux: [
+            { degats: 8 },
+            { cadence: -1 },
+            { degats: 6 },
+            { portee: 0.4 },
+            { projectiles: 1 },
+          ],
+          lancer(game, arme, joueur) {
+            game.declencherDash(joueur, 520);
+            game.creerZone({
+              emoji: "💥",
+              x: joueur.x,
+              y: joueur.y,
+              rayon: 90 + arme.portee * 80,
+              degats: (arme.degats + 10) * game.multDegats(joueur),
+              duree: 0.35,
+            });
+          },
+        },
+        {
+          id: "fouet",
+          nom: "Fouet Castlevania",
+          emoji: "📿",
+          description: "Balaye latéralement.",
+          baseCooldown: 0.9,
+          niveaux: [
+            { degats: 4 },
+            { projectiles: 1 },
+            { cadence: -0.1 },
+            { degats: 3 },
+            { portee: 0.3 },
+          ],
+          lancer(game, arme, joueur) {
+            const direction = Math.sign(joueur.dernierVX || 1) || 1;
+            const angle = direction > 0 ? 0 : Math.PI;
+            game.creerZone({
+              emoji: "📿",
+              x: joueur.x + Math.cos(angle) * (80 + arme.portee * 60),
+              y: joueur.y + Math.sin(angle) * (40 + arme.portee * 30),
+              rayon: 60,
+              degats: (arme.degats + 2) * game.multDegats(joueur),
+              duree: 0.2,
+            });
+          },
+        },
+        {
+          id: "missiles",
+          nom: "Missiles Metroid",
+          emoji: "🚀",
+          description: "Projeteurs auto-guidés.",
+          baseCooldown: 3,
+          niveaux: [
+            { degats: 7 },
+            { projectiles: 1 },
+            { cadence: -0.4 },
+            { degats: 6 },
+            { vitesse: 1 },
+          ],
+          lancer(game, arme, joueur) {
+            const cibles = game.trouverElites(2 + arme.projectiles);
+            for (const cible of cibles) {
+              const angle = Math.atan2(cible.y - joueur.y, cible.x - joueur.x);
+              game.creerProjectile({
+                emoji: "🚀",
+                x: joueur.x,
+                y: joueur.y,
+                vx: Math.cos(angle) * 280,
+                vy: Math.sin(angle) * 280,
+                rayon: 12,
+                degats: (arme.degats + 5) * game.multDegats(joueur),
+                duree: 3.5,
+                homing: true,
+              });
+            }
+          },
+        },
+        {
+          id: "lame",
+          nom: "Lame Énergie",
+          emoji: "🗡️",
+          description: "Arc frontal multi-coups.",
+          baseCooldown: 1.2,
+          niveaux: [
+            { degats: 5 },
+            { projectiles: 1 },
+            { cadence: -0.2 },
+            { portee: 0.2 },
+            { degats: 5 },
+          ],
+          lancer(game, arme, joueur) {
+            const angle = joueur.direction ?? 0;
+            const base = (arme.degats + 4) * game.multDegats(joueur);
+            for (let i = -1; i <= 1; i++) {
+              game.creerZone({
+                emoji: "🗡️",
+                x: joueur.x + Math.cos(angle + i * 0.25) * (70 + arme.portee * 50),
+                y: joueur.y + Math.sin(angle + i * 0.25) * (70 + arme.portee * 50),
+                rayon: 55,
+                degats: base,
+                duree: 0.18,
+              });
+            }
+          },
+        },
+        {
+          id: "hadouken",
+          nom: "Hadouken",
+          emoji: "👊",
+          description: "Projectile rapide perçant.",
+          baseCooldown: 0.8,
+          niveaux: [
+            { degats: 6 },
+            { projectiles: 1 },
+            { cadence: -0.1 },
+            { degats: 4 },
+            { portee: 0.1 },
+          ],
+          lancer(game, arme, joueur) {
+            const angle = joueur.direction ?? 0;
+            game.creerProjectile({
+              emoji: "💥",
+              x: joueur.x,
+              y: joueur.y,
+              vx: Math.cos(angle) * 320,
+              vy: Math.sin(angle) * 320,
+              rayon: 14,
+              degats: (arme.degats + 3) * game.multDegats(joueur),
+              duree: 1.6,
+              pierce: 2,
+            });
+          },
+        },
+        {
+          id: "bfg",
+          nom: "BFG DOOM",
+          emoji: "🟢",
+          description: "Sphère lente massive.",
+          baseCooldown: 9,
+          niveaux: [
+            { degats: 25 },
+            { cadence: -1.5 },
+            { portee: 0.3 },
+            { degats: 20 },
+            { projectiles: 1 },
+          ],
+          lancer(game, arme, joueur) {
+            const angle = joueur.direction ?? game.rng.range(-Math.PI, Math.PI);
+            game.creerProjectile({
+              emoji: "🟢",
+              x: joueur.x,
+              y: joueur.y,
+              vx: Math.cos(angle) * 120,
+              vy: Math.sin(angle) * 120,
+              rayon: 30,
+              degats: (arme.degats + 30) * game.multDegats(joueur),
+              duree: 3.5,
+              explosion: true,
+            });
+          },
+        },
+        {
+          id: "tetris",
+          nom: "Pluie de Blocs",
+          emoji: "🟦",
+          description: "Blocs tombant aléatoirement.",
+          baseCooldown: 4.5,
+          niveaux: [
+            { degats: 8 },
+            { projectiles: 2 },
+            { cadence: -0.7 },
+            { degats: 6 },
+            { portee: 0.1 },
+          ],
+          lancer(game, arme, joueur) {
+            const count = 3 + arme.projectiles;
+            for (let i = 0; i < count; i++) {
+              const angle = game.rng.range(0, Math.PI * 2);
+              const distance = game.rng.range(80, 260);
+              const x = joueur.x + Math.cos(angle) * distance;
+              const y = joueur.y + Math.sin(angle) * distance;
+              game.creerProjectile({
+                emoji: ["🟥", "🟧", "🟨", "🟩", "🟦", "🟪"][i % 6],
+                x,
+                y: y - 220,
+                vx: 0,
+                vy: 280,
+                rayon: 24,
+                degats: (arme.degats + 6) * game.multDegats(joueur),
+                duree: 1.2,
+                chute: true,
+              });
+            }
+          },
+        },
+        {
+          id: "chomp",
+          nom: "Chomp Pac-Man",
+          emoji: "😀",
+          description: "Aura mordante.",
+          baseCooldown: 0.5,
+          niveaux: [
+            { degats: 3 },
+            { portee: 0.25 },
+            { cadence: -0.05 },
+            { degats: 3 },
+            { portee: 0.25 },
+          ],
+          lancer(game, arme, joueur) {
+            joueur.aura = {
+              rayon: 70 + arme.portee * 80,
+              degats: (arme.degats + 1.5) * game.multDegats(joueur),
+            };
+          },
+        },
+        {
+          id: "cri",
+          nom: "Cri de Bataille",
+          emoji: "📣",
+          description: "Buff cadence/vitesse.",
+          baseCooldown: 8,
+          niveaux: [
+            { cadence: -0.8 },
+            { portee: 0.1 },
+            { degats: 4 },
+            { cadence: -0.5 },
+            { projectiles: 1 },
+          ],
+          lancer(game, arme, joueur) {
+            joueur.buffCadence = Math.max(joueur.buffCadence, 5 + arme.projectiles);
+            joueur.buffVitesse = Math.max(joueur.buffVitesse, 5 + arme.projectiles);
+            game.notifier("Cri de bataille !", "📣");
+          },
+        },
+        {
+          id: "chain",
+          nom: "Arc Électrique",
+          emoji: "⚡",
+          description: "Chaîne les ennemis proches.",
+          baseCooldown: 2.6,
+          niveaux: [
+            { degats: 5 },
+            { projectiles: 1 },
+            { cadence: -0.3 },
+            { degats: 4 },
+            { portee: 0.2 },
+          ],
+          lancer(game, arme, joueur) {
+            const cibles = game.trouverCibles(joueur.x, joueur.y, 220 + arme.portee * 90, 4 + arme.projectiles);
+            let dernierX = joueur.x;
+            let dernierY = joueur.y;
+            for (const cible of cibles) {
+              game.creerEclair(dernierX, dernierY, cible.x, cible.y);
+              game.infligerDegats(cible, (arme.degats + 4) * game.multDegats(joueur));
+              dernierX = cible.x;
+              dernierY = cible.y;
+            }
+          },
+        },
+      ];
+      const BIOMES = [
+        {
+          id: "alpage",
+          nom: "Alpage Crépusculaire",
+          emoji: "🏔️",
+          couleur: "#22324b",
+          hazard(game, dt) {
+            game.hazardTimer -= dt;
+            if (game.hazardTimer <= 0) {
+              game.hazardTimer = 12;
+              const angle = game.rng.range(0, Math.PI * 2);
+              game.wind = { angle, duree: 4, force: 90 };
+              game.notifier("Bourrasque !", "💨");
+            }
+            if (game.wind && game.wind.duree > 0) {
+              game.wind.duree -= dt;
+              game.player.x += Math.cos(game.wind.angle) * game.wind.force * dt;
+              game.player.y += Math.sin(game.wind.angle) * game.wind.force * dt;
+            }
+          },
+        },
+        {
+          id: "cimetiere",
+          nom: "Cimetière Roman",
+          emoji: "⛪",
+          couleur: "#2b203d",
+          hazard(game, dt) {
+            game.hazardTimer -= dt;
+            if (game.hazardTimer <= 0) {
+              game.hazardTimer = 9;
+              const cible = game.ennemis[game.rng.int(0, Math.max(0, game.ennemis.length - 1))];
+              if (cible) {
+                cible.stun = 2.5;
+                game.notifier("Cloche étourdissante !", "🔔");
+              }
+            }
+          },
+        },
+      ];
+
+      const WAVES = [
+        { start: 0, end: 120, trash: [{ emoji: "🦇", pv: 12, degats: 5, vitesse: 80 }], elite: { emoji: "🐺", pv: 120, degats: 12, vitesse: 120 } },
+        {
+          start: 120,
+          end: 300,
+          trash: [
+            { emoji: "🦇", pv: 16, degats: 6, vitesse: 95 },
+            { emoji: "🐀", pv: 22, degats: 7, vitesse: 75 },
+          ],
+          elite: { emoji: "🧙", pv: 150, degats: 10, vitesse: 90 },
+        },
+        {
+          start: 300,
+          end: 420,
+          trash: [
+            { emoji: "🐀", pv: 28, degats: 8, vitesse: 90 },
+            { emoji: "🪦", pv: 36, degats: 9, vitesse: 70 },
+          ],
+          elite: { emoji: "🦉", pv: 190, degats: 14, vitesse: 110 },
+        },
+        {
+          start: 420,
+          end: 9999,
+          trash: [
+            { emoji: "🪦", pv: 44, degats: 10, vitesse: 90 },
+            { emoji: "🕯️", pv: 52, degats: 11, vitesse: 85 },
+          ],
+          elite: { emoji: "🧟", pv: 260, degats: 16, vitesse: 115 },
+        },
+      ];
+
+      const BOSSES = [
+        { minute: 2.5, emoji: "🐺", nom: "Le Comte Lupin", pv: 480, degats: 18, vitesse: 120 },
+        { minute: 5, emoji: "👑", nom: "La Reine Corneille", pv: 680, degats: 22, vitesse: 110 },
+        { minute: 7, emoji: "🛎️", nom: "L'Ancien Clocher", pv: 900, degats: 26, vitesse: 95 },
+      ];
+      class RNG {
+        constructor(seed = Date.now()) {
+          this.seed = seed % 2147483647;
+          if (this.seed <= 0) this.seed += 2147483646;
+        }
+        next() {
+          this.seed = (this.seed * 16807) % 2147483647;
+          return (this.seed - 1) / 2147483646;
+        }
+        range(min, max) {
+          return min + (max - min) * this.next();
+        }
+        int(min, max) {
+          if (max < min) return min;
+          return Math.floor(this.range(min, max + 1));
+        }
+        choice(list) {
+          return list[Math.floor(this.next() * list.length) % list.length];
+        }
+      }
+
+      class AudioEngine {
+        constructor() {
+          this.enabled = false;
+          this.volume = 0.6;
+          this.context = null;
+          this.unlock = this.unlock.bind(this);
+          document.addEventListener("pointerdown", this.unlock, { once: true, passive: true });
+          document.addEventListener("keydown", this.unlock, { once: true });
+        }
+        unlock() {
+          if (!this.context) {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if (Ctx) {
+              this.context = new Ctx();
+            }
+          }
+          this.enabled = true;
+        }
+        play(freq = 440, duration = 0.1, type = "sine") {
+          if (!this.enabled || !this.context) return;
+          const ctx = this.context;
+          const now = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(this.volume, now);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + duration);
+        }
+      }
+
+      const audio = new AudioEngine();
+
+      const canvas = document.getElementById("game-canvas");
+      const ctx = canvas.getContext("2d");
+      const heroGrid = document.getElementById("hero-grid");
+      const biomeGrid = document.getElementById("biome-grid");
+      const menuPanel = document.getElementById("menu-panel");
+      const levelPanel = document.getElementById("levelup-panel");
+      const resumePanel = document.getElementById("resume-panel");
+      const levelOptions = document.getElementById("levelup-options");
+      const hud = document.getElementById("hud");
+      const notificationEl = document.getElementById("notification");
+      const highscoreText = document.getElementById("highscore-text");
+      const stick = document.getElementById("stick");
+      const stickThumb = document.getElementById("stick-thumb");
+      let options = {
+        daltonisme: false,
+        modePerformance: false,
+        uiScale: 1,
+        volume: 0.6,
+      };
+
+      try {
+        const saved = JSON.parse(localStorage.getItem("goat_survivors_options_v2") || "null");
+        if (saved) {
+          options = { ...options, ...saved };
+        }
+      } catch (error) {
+        console.warn("Options illisibles", error);
+      }
+
+      document.getElementById("option-daltonisme").checked = options.daltonisme;
+      document.getElementById("option-performance").checked = options.modePerformance;
+      document.getElementById("option-ui").value = options.uiScale;
+      document.getElementById("option-volume").value = options.volume;
+      document.documentElement.style.fontSize = `${16 * options.uiScale}px`;
+      document.body.style.setProperty("--accent", options.daltonisme ? "#80ffdb" : "#f7b32b");
+      audio.volume = options.volume;
+
+      function saveOptions() {
+        localStorage.setItem("goat_survivors_options_v2", JSON.stringify(options));
+      }
+
+      const highscoreData = (() => {
+        try {
+          return JSON.parse(localStorage.getItem("goat_survivors_highscore_v2") || "null") || {
+            score: 0,
+            detail: "-",
+          };
+        } catch (error) {
+          return { score: 0, detail: "-" };
+        }
+      })();
+
+      function updateHighscoreText() {
+        highscoreText.textContent = `${highscoreData.score.toLocaleString("fr-FR")} pts — ${highscoreData.detail}`;
+      }
+      updateHighscoreText();
+      function createCard(container, items, selected, onSelect) {
+        container.innerHTML = "";
+        for (const item of items) {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = "hero-card";
+          card.dataset.selected = item.id === selected;
+          card.innerHTML = `<div style="font-size:2.2rem">${item.emoji}</div><h3>${item.nom}</h3><p>${item.description}</p>`;
+          card.addEventListener("click", () => {
+            onSelect(item);
+            createCard(container, items, item.id, onSelect);
+          });
+          container.appendChild(card);
+        }
+      }
+      const game = {
+        state: "menu",
+        rng: new RNG(Date.now()),
+        hero: HEROES[0],
+        biome: BIOMES[0],
+        seed: Math.floor(Math.random() * 1_000_000),
+        player: null,
+        ennemis: [],
+        projectiles: [],
+        zones: [],
+        xpOrbs: [],
+        effets: [],
+        notifications: [],
+        temps: 0,
+        xp: 0,
+        niveau: 1,
+        xpPourNiveau: 50,
+        rerolls: 1,
+        banish: 1,
+        armes: [],
+        passifs: [],
+        score: 0,
+        kills: 0,
+        hazardTimer: 0,
+        wind: null,
+        lastUpdate: performance.now(),
+        running: false,
+        paused: false,
+        input: { keys: new Set(), pointer: null },
+      };
+
+      game.multDegats = (joueur) => 1 + joueur.bonusDegats;
+      function initPlayer() {
+        const hero = game.hero;
+        game.player = {
+          x: 0,
+          y: 0,
+          pv: hero.stats.pv,
+          pvMax: hero.stats.pv,
+          vitesse: hero.stats.vitesse,
+          bonusDegats: hero.stats.degats,
+          bonusCadence: hero.stats.cadence,
+          bonusPortee: 0,
+          bonusAimant: hero.stats.aimant,
+          bonusVitesse: 0,
+          bonusCrit: 0,
+          dash: 2,
+          dashMax: 2,
+          dashRecharge: 0,
+          invulnerable: 0,
+          aura: null,
+          aimantTemp: 0,
+          buffCadence: 0,
+          buffVitesse: 0,
+          freezeTimer: hero.id === "neiges" ? 10 : undefined,
+          eclairTimer: hero.id === "electrique" ? 5 : undefined,
+          dernierVX: 1,
+        };
+        game.ennemis = [];
+        game.projectiles = [];
+        game.zones = [];
+        game.xpOrbs = [];
+        game.notifications = [];
+        game.temps = 0;
+        game.xp = 0;
+        game.score = 0;
+        game.niveau = 1;
+        game.xpPourNiveau = 50;
+        game.rerolls = 1;
+        game.banish = 1;
+        game.armes = [];
+        game.passifs = [];
+        game.kills = 0;
+        game.hazardTimer = 0;
+        game.wind = null;
+        game.enemyTimer = 0;
+        game.eliteTimer = 15;
+        game.bossIndex = 0;
+        game.rng = new RNG(game.seed);
+        appliquerPassifHero(hero.id);
+        donnerArmeInitiale(hero.id);
+      }
+
+      function appliquerPassifHero(id) {
+        const joueur = game.player;
+        if (!joueur) return;
+        if (id === "alpine") {
+          joueur.bonusAimant += 0.15;
+        } else if (id === "bouc") {
+          joueur.bonusDegats += 0.15;
+        } else if (id === "neiges") {
+          joueur.bonusPortee += 0.1;
+        } else if (id === "electrique") {
+          joueur.bonusCadence += 0.15;
+        }
+      }
+
+      function donnerArmeInitiale(heroId) {
+        const mapping = { alpine: "mario", neiges: "anneaux", bouc: "fouet", electrique: "chain" };
+        ajouterArme(mapping[heroId] || "mario");
+      }
+      function creerProjectile(data) {
+        game.projectiles.push({
+          ...data,
+          temps: data.duree,
+          pierce: data.pierce ?? 1,
+          rebond: data.rebond || 0,
+        });
+      }
+      game.creerProjectile = creerProjectile;
+
+      function creerZone(data) {
+        game.zones.push({ ...data, temps: data.duree || 0.5 });
+      }
+      game.creerZone = creerZone;
+
+      function creerEclair(x1, y1, x2, y2) {
+        game.effets.push({ type: "eclair", x1, y1, x2, y2, temps: 0.2 });
+      }
+      game.creerEclair = creerEclair;
+
+      function notifier(message, emoji = "⚠️") {
+        game.notifications.push({ message: `${emoji} ${message}`, temps: 2.5 });
+        notificationEl.textContent = `${emoji} ${message}`;
+        notificationEl.classList.add("visible");
+        setTimeout(() => notificationEl.classList.remove("visible"), 800);
+      }
+      game.notifier = notifier;
+
+      function declencherDash(joueur, freq) {
+        if (joueur.dash > 0) {
+          joueur.dash -= 1;
+          joueur.invulnerable = 0.45;
+          audio.play(freq, 0.08, "sawtooth");
+        }
+      }
+      game.declencherDash = declencherDash;
+
+      function trouverElites(max) {
+        const elites = game.ennemis.filter((e) => e.elite || e.boss);
+        elites.sort((a, b) => a.pv - b.pv);
+        return elites.slice(0, max);
+      }
+      game.trouverElites = trouverElites;
+
+      function trouverCibles(x, y, rayon, max) {
+        const candidats = game.ennemis
+          .filter((e) => Math.hypot(e.x - x, e.y - y) < rayon)
+          .sort((a, b) => a.pv - b.pv);
+        return candidats.slice(0, max);
+      }
+      game.trouverCibles = trouverCibles;
+
+      function infligerDegats(ennemi, degats) {
+        if (!ennemi || ennemi.pv <= 0) return;
+        ennemi.pv -= degats;
+        if (ennemi.pv <= 0) {
+          tuerEnnemi(ennemi);
+        }
+      }
+      game.infligerDegats = infligerDegats;
+
+      function spawnEnnemi(type) {
+        const joueur = game.player;
+        if (!joueur) return;
+        const angle = game.rng.range(0, Math.PI * 2);
+        const distance = game.rng.range(320, 420);
+        game.ennemis.push({
+          ...type,
+          x: joueur.x + Math.cos(angle) * distance,
+          y: joueur.y + Math.sin(angle) * distance,
+          vitesse: type.vitesse || 80,
+          pv: type.pv || 30,
+          elite: !!type.elite,
+          boss: !!type.boss,
+          degats: type.degats || 8,
+          stun: 0,
+        });
+      }
+
+      function tuerEnnemi(ennemi) {
+        audio.play(260 + Math.random() * 100, 0.06, "square");
+        game.kills += 1;
+        game.score += 10;
+        const xpValeur = ennemi.elite || ennemi.boss ? 15 : 6;
+        game.xpOrbs.push({ x: ennemi.x, y: ennemi.y, valeur: xpValeur, emoji: ennemi.elite ? "🔷" : "🔹" });
+        if (ennemi.boss) {
+          dropCoffre(ennemi);
+        }
+        ennemi.retirer = true;
+      }
+
+      function dropCoffre(ennemi) {
+        game.xpOrbs.push({ x: ennemi.x, y: ennemi.y, valeur: 40, coffre: true, emoji: "🎁" });
+      }
+      function ajouterArme(id) {
+        const def = WEAPONS.find((w) => w.id === id);
+        if (!def) return;
+        const existante = game.armes.find((a) => a.id === id);
+        if (existante) {
+          if (existante.niveau < 5) {
+            existante.niveau += 1;
+            appliquerUpgrade(def, existante.niveau - 1, existante);
+          }
+        } else {
+          const instance = {
+            id: def.id,
+            niveau: 1,
+            cooldown: 0.3,
+            baseCooldown: def.baseCooldown,
+            degats: def.niveaux[0]?.degats || 6,
+            projectiles: def.niveaux[0]?.projectiles || 0,
+            portee: def.niveaux[0]?.portee || 0,
+            vitesseBonus: def.niveaux[0]?.vitesse || 0,
+            cadenceBonus: def.niveaux[0]?.cadence || 0,
+          };
+          game.armes.push(instance);
+        }
+      }
+
+      function appliquerUpgrade(def, index, instance) {
+        const data = def.niveaux[index];
+        if (!data) return;
+        if (data.degats) instance.degats += data.degats;
+        if (data.projectiles) instance.projectiles += data.projectiles;
+        if (data.portee) instance.portee += data.portee;
+        if (data.vitesse) instance.vitesseBonus = (instance.vitesseBonus || 0) + data.vitesse;
+        if (data.cadence) instance.cadenceBonus = (instance.cadenceBonus || 0) + data.cadence;
+        if (data.aimant) game.player.bonusAimant += data.aimant;
+      }
+
+      function ajouterPassif(id) {
+        const def = PASSIVES.find((p) => p.id === id);
+        if (!def || game.passifs.includes(id)) return;
+        game.passifs.push(id);
+        def.effet(game.player);
+      }
+
+      function tirerArmes(dt) {
+        const joueur = game.player;
+        if (!joueur) return;
+        for (const instance of game.armes) {
+          const def = WEAPONS.find((w) => w.id === instance.id);
+          if (!def) continue;
+          const cadence = Math.max(0.2, instance.baseCooldown * (1 - joueur.bonusCadence - joueur.buffCadence * 0.05 - (instance.cadenceBonus || 0)));
+          instance.cooldown -= dt;
+          if (instance.cooldown <= 0) {
+            def.lancer(game, instance, joueur);
+            instance.cooldown = cadence;
+          }
+        }
+      }
+
+      function collecterXP(joueur, dt) {
+        const aimant = 140 + joueur.bonusAimant * 140 + joueur.aimantTemp * 80;
+        for (const orb of game.xpOrbs) {
+          const dist = Math.hypot(orb.x - joueur.x, orb.y - joueur.y);
+          if (dist < aimant) {
+            const dx = ((joueur.x - orb.x) / (dist || 1)) * 220 * dt;
+            const dy = ((joueur.y - orb.y) / (dist || 1)) * 220 * dt;
+            orb.x += dx;
+            orb.y += dy;
+          }
+          if (dist < 28) {
+            if (orb.coffre) {
+              audio.play(640, 0.2, "triangle");
+              ouvrirCoffre();
+            } else {
+              audio.play(520, 0.05, "sine");
+              const bonusXp = 1 + game.hero.stats.xp;
+              game.xp += orb.valeur * bonusXp;
+              game.score += orb.valeur * 5;
+            }
+            orb.retirer = true;
+          }
+        }
+        game.xpOrbs = game.xpOrbs.filter((o) => !o.retirer);
+      }
+
+      function ouvrirCoffre() {
+        const disponibles = [
+          ...WEAPONS.filter((w) => {
+            const instance = game.armes.find((a) => a.id === w.id);
+            return !instance || instance.niveau < 5;
+          }).map((w) => ({ type: "weapon", id: w.id })),
+          ...PASSIVES.filter((p) => !game.passifs.includes(p.id)).map((p) => ({ type: "passive", id: p.id })),
+        ];
+        if (disponibles.length === 0) return;
+        const choix = disponibles[game.rng.int(0, disponibles.length - 1)];
+        if (choix.type === "weapon") {
+          ajouterArme(choix.id);
+        } else {
+          ajouterPassif(choix.id);
+        }
+        notifier("Coffre : amélioration !", "🎁");
+      }
+
+      function verifierNiveau() {
+        if (game.xp >= game.xpPourNiveau) {
+          game.xp -= game.xpPourNiveau;
+          game.niveau += 1;
+          game.xpPourNiveau = Math.round(game.xpPourNiveau * 1.2 + 25);
+          game.state = "levelup";
+          afficherLevelUp();
+        }
+      }
+      function afficherLevelUp() {
+        levelOptions.innerHTML = "";
+        const optionsDisponibles = [];
+        const armesDispo = WEAPONS.filter((w) => {
+          const instance = game.armes.find((a) => a.id === w.id);
+          return !instance || instance.niveau < 5;
+        }).map((w) => ({ type: "weapon", id: w.id }));
+        const passifsDispo = PASSIVES.filter((p) => !game.passifs.includes(p.id)).map((p) => ({ type: "passive", id: p.id }));
+        optionsDisponibles.push(...armesDispo, ...passifsDispo);
+        if (optionsDisponibles.length === 0) {
+          game.state = "running";
+          return;
+        }
+        for (let i = 0; i < Math.min(3, optionsDisponibles.length); i++) {
+          const index = game.rng.int(0, optionsDisponibles.length - 1);
+          const option = optionsDisponibles.splice(index, 1)[0];
+          if (!option) continue;
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "hero-card";
+          if (option.type === "weapon") {
+            const def = WEAPONS.find((w) => w.id === option.id);
+            const instance = game.armes.find((a) => a.id === option.id);
+            button.innerHTML = `<div style="font-size:2rem">${def.emoji}</div><h3>${def.nom}</h3><p>${def.description}</p><p>Niveau ${instance ? instance.niveau + 1 : 1}</p>`;
+            button.addEventListener("click", () => {
+              ajouterArme(def.id);
+              fermerLevelUp();
+            });
+          } else {
+            const def = PASSIVES.find((p) => p.id === option.id);
+            button.innerHTML = `<div style="font-size:2rem">${def.emoji}</div><h3>${def.nom}</h3><p>${def.description}</p>`;
+            button.addEventListener("click", () => {
+              ajouterPassif(def.id);
+              fermerLevelUp();
+            });
+          }
+          levelOptions.appendChild(button);
+        }
+        document.getElementById("reroll-button").textContent = `Reroll (${game.rerolls})`;
+        levelPanel.classList.remove("hidden");
+      }
+
+      function fermerLevelUp() {
+        levelPanel.classList.add("hidden");
+        game.state = "running";
+      }
+
+      document.getElementById("skip-button").addEventListener("click", () => fermerLevelUp());
+      document.getElementById("reroll-button").addEventListener("click", () => {
+        if (game.rerolls > 0) {
+          game.rerolls -= 1;
+          afficherLevelUp();
+        }
+      });
+      document.getElementById("banish-button").addEventListener("click", () => {
+        if (game.banish > 0) {
+          game.banish -= 1;
+          game.rng.next();
+          fermerLevelUp();
+        }
+      });
+      document.getElementById("option-daltonisme").addEventListener("change", (event) => {
+        options.daltonisme = event.target.checked;
+        document.body.style.setProperty("--accent", options.daltonisme ? "#80ffdb" : "#f7b32b");
+        saveOptions();
+      });
+      document.getElementById("option-performance").addEventListener("change", (event) => {
+        options.modePerformance = event.target.checked;
+        saveOptions();
+      });
+      document.getElementById("option-ui").addEventListener("input", (event) => {
+        options.uiScale = parseFloat(event.target.value);
+        document.documentElement.style.fontSize = `${16 * options.uiScale}px`;
+        saveOptions();
+      });
+      document.getElementById("option-volume").addEventListener("input", (event) => {
+        options.volume = parseFloat(event.target.value);
+        audio.volume = options.volume;
+        saveOptions();
+      });
+
+      document.getElementById("reset-score").addEventListener("click", () => {
+        highscoreData.score = 0;
+        highscoreData.detail = "-";
+        localStorage.removeItem("goat_survivors_highscore_v2");
+        updateHighscoreText();
+      });
+      createCard(heroGrid, HEROES, game.hero.id, (hero) => {
+        game.hero = hero;
+      });
+      createCard(biomeGrid, BIOMES, game.biome.id, (biome) => {
+        game.biome = biome;
+      });
+
+      document.getElementById("start-button").addEventListener("click", () => {
+        audio.unlock();
+        game.state = "running";
+        game.seed = Math.floor(Math.random() * 1_000_000);
+        initPlayer();
+        menuPanel.classList.add("hidden");
+        levelPanel.classList.add("hidden");
+        resumePanel.classList.add("hidden");
+        game.running = true;
+        game.lastUpdate = performance.now();
+      });
+
+      document.getElementById("menu-button").addEventListener("click", () => {
+        resumePanel.classList.add("hidden");
+        menuPanel.classList.remove("hidden");
+        game.state = "menu";
+      });
+
+      document.getElementById("retry-button").addEventListener("click", () => {
+        resumePanel.classList.add("hidden");
+        game.state = "running";
+        initPlayer();
+      });
+      window.addEventListener("resize", () => {
+        canvas.width = canvas.clientWidth * window.devicePixelRatio;
+        canvas.height = canvas.clientHeight * window.devicePixelRatio;
+        ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      });
+      window.dispatchEvent(new Event("resize"));
+
+      document.addEventListener("keydown", (event) => {
+        const key = event.key.toLowerCase();
+        if (key === "p") {
+          game.paused = !game.paused;
+        }
+        if (key === " " && game.player) {
+          declencherDash(game.player, 640);
+        }
+        game.input.keys.add(key);
+      });
+
+      document.addEventListener("keyup", (event) => {
+        game.input.keys.delete(event.key.toLowerCase());
+      });
+
+      canvas.addEventListener("pointerdown", (event) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        if (x > rect.width * 0.7 && y > rect.height * 0.7 && game.player) {
+          declencherDash(game.player, 600);
+        } else {
+          game.input.pointer = { id: event.pointerId, startX: x, startY: y, x, y };
+          stick.classList.add("visible");
+          stick.style.left = `${x - 60}px`;
+          stick.style.top = `${y - 60}px`;
+          stickThumb.style.left = `${x}px`;
+          stickThumb.style.top = `${y}px`;
+        }
+        canvas.setPointerCapture(event.pointerId);
+      });
+
+      canvas.addEventListener("pointermove", (event) => {
+        const pointer = game.input.pointer;
+        if (!pointer || pointer.id !== event.pointerId) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        pointer.x = x;
+        pointer.y = y;
+        const dx = x - pointer.startX;
+        const dy = y - pointer.startY;
+        const max = 60;
+        const dist = Math.hypot(dx, dy);
+        const clamped = Math.min(dist, max);
+        const angle = Math.atan2(dy, dx);
+        stickThumb.style.left = `${pointer.startX + Math.cos(angle) * clamped}px`;
+        stickThumb.style.top = `${pointer.startY + Math.sin(angle) * clamped}px`;
+      });
+
+      canvas.addEventListener("pointerup", (event) => {
+        if (game.input.pointer && game.input.pointer.id === event.pointerId) {
+          game.input.pointer = null;
+          stick.classList.remove("visible");
+        }
+        canvas.releasePointerCapture(event.pointerId);
+      });
+      function update(dt) {
+        if (!game.running || game.paused || game.state !== "running") return;
+        const joueur = game.player;
+        if (!joueur) return;
+        game.temps += dt;
+        if (game.temps >= 7 * 60) {
+          finRun(true);
+          return;
+        }
+        game.biome.hazard(game, dt);
+        if (joueur.buffCadence > 0) joueur.buffCadence -= dt;
+        if (joueur.buffVitesse > 0) joueur.buffVitesse -= dt;
+        if (joueur.invulnerable > 0) joueur.invulnerable -= dt;
+        if (joueur.aimantTemp > 0) joueur.aimantTemp -= dt;
+        if (joueur.dash < joueur.dashMax) {
+          joueur.dashRecharge += dt;
+          if (joueur.dashRecharge >= 2.4) {
+            joueur.dash += 1;
+            joueur.dashRecharge = 0;
+          }
+        }
+        if (joueur.freezeTimer !== undefined) {
+          joueur.freezeTimer -= dt;
+          if (joueur.freezeTimer <= 0) {
+            joueur.freezeTimer = 10;
+            game.zones.push({ emoji: "❄️", x: joueur.x, y: joueur.y, rayon: 120, degats: 8, freeze: 1.5, temps: 1 });
+            notifier("Gel caprin !", "❄️");
+          }
+        }
+        if (joueur.eclairTimer !== undefined) {
+          joueur.eclairTimer -= dt;
+          if (joueur.eclairTimer <= 0) {
+            joueur.eclairTimer = 5;
+            const cible = game.ennemis[game.rng.int(0, Math.max(0, game.ennemis.length - 1))];
+            if (cible) {
+              creerEclair(joueur.x, joueur.y, cible.x, cible.y);
+              infligerDegats(cible, 30 * game.multDegats(joueur));
+            }
+          }
+        }
+
+        let dirX = 0;
+        let dirY = 0;
+        if (game.input.pointer) {
+          dirX = game.input.pointer.x - game.input.pointer.startX;
+          dirY = game.input.pointer.y - game.input.pointer.startY;
+        } else {
+          if (game.input.keys.has("z") || game.input.keys.has("arrowup")) dirY -= 1;
+          if (game.input.keys.has("s") || game.input.keys.has("arrowdown")) dirY += 1;
+          if (game.input.keys.has("q") || game.input.keys.has("arrowleft")) dirX -= 1;
+          if (game.input.keys.has("d") || game.input.keys.has("arrowright")) dirX += 1;
+        }
+        const len = Math.hypot(dirX, dirY);
+        if (len > 0.01) {
+          dirX /= len;
+          dirY /= len;
+          joueur.direction = Math.atan2(dirY, dirX);
+          joueur.dernierVX = dirX;
+        } else {
+          dirX = 0;
+          dirY = 0;
+        }
+        const vitesse = (joueur.vitesse + joueur.bonusVitesse * 60 + joueur.buffVitesse * 30) * dt;
+        joueur.x += dirX * vitesse;
+        joueur.y += dirY * vitesse;
+
+        tirerArmes(dt);
+        collecterXP(joueur, dt);
+        verifierNiveau();
+
+        game.enemyTimer = (game.enemyTimer || 0) - dt;
+        if (game.enemyTimer <= 0) {
+          const vague = WAVES.find((v) => game.temps >= v.start && game.temps < v.end) || WAVES[WAVES.length - 1];
+          const pack = options.modePerformance ? 2 : 4;
+          for (let i = 0; i < pack; i++) {
+            spawnEnnemi(game.rng.choice(vague.trash));
+          }
+          game.enemyTimer = Math.max(0.8, 3.2 - game.temps / 90);
+        }
+        game.eliteTimer = (game.eliteTimer || 15) - dt;
+        if (game.eliteTimer <= 0) {
+          const vague = WAVES.find((v) => game.temps >= v.start && game.temps < v.end) || WAVES[WAVES.length - 1];
+          spawnEnnemi({ ...vague.elite, elite: true });
+          notifier("Élite en approche", "💢");
+          game.eliteTimer = 22;
+        }
+        const boss = BOSSES[game.bossIndex];
+        if (boss && game.temps >= boss.minute * 60) {
+          spawnEnnemi({ ...boss, boss: true });
+          notifier(`${boss.nom} arrive !`, boss.emoji);
+          game.bossIndex += 1;
+        }
+
+        for (const proj of game.projectiles) {
+          proj.temps -= dt;
+          if (proj.homing) {
+            const cible = trouverCibles(proj.x, proj.y, 320, 1)[0];
+            if (cible) {
+              const angle = Math.atan2(cible.y - proj.y, cible.x - proj.x);
+              const vitesse = Math.hypot(proj.vx, proj.vy);
+              proj.vx = Math.cos(angle) * vitesse;
+              proj.vy = Math.sin(angle) * vitesse;
+            }
+          }
+          proj.x += proj.vx * dt;
+          proj.y += proj.vy * dt;
+          if (proj.retour) {
+            const dx = proj.x - joueur.x;
+            const dy = proj.y - joueur.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist > (proj.range || 240)) {
+              proj.vx *= -1;
+              proj.vy *= -1;
+              proj.retour = false;
+            }
+          }
+          for (const ennemi of game.ennemis) {
+            if (ennemi.retirer || ennemi.stun === Infinity) continue;
+            const dist = Math.hypot(ennemi.x - proj.x, ennemi.y - proj.y);
+            if (dist < (proj.rayon || 14)) {
+              infligerDegats(ennemi, proj.degats);
+              proj.pierce -= 1;
+              if (proj.explosion) {
+                game.zones.push({ emoji: "💥", x: proj.x, y: proj.y, rayon: 120, degats: proj.degats * 0.6, temps: 0.4 });
+              }
+              if (proj.pierce <= 0) {
+                proj.temps = 0;
+                break;
+              }
+            }
+          }
+        }
+        game.projectiles = game.projectiles.filter((p) => p.temps > 0);
+
+        for (const zone of game.zones) {
+          zone.temps -= dt;
+          if (zone.suit) {
+            zone.angle += dt * 2;
+            zone.x = joueur.x + Math.cos(zone.angle) * zone.rayonOrbit;
+            zone.y = joueur.y + Math.sin(zone.angle) * zone.rayonOrbit;
+          }
+          for (const ennemi of game.ennemis) {
+            if (ennemi.retirer) continue;
+            const dist = Math.hypot(ennemi.x - zone.x, ennemi.y - zone.y);
+            if (dist < (zone.rayon || 60)) {
+              infligerDegats(ennemi, (zone.degats || 5) * dt * 5);
+              if (zone.freeze) {
+                ennemi.stun = Math.max(ennemi.stun, zone.freeze);
+              }
+            }
+          }
+        }
+        game.zones = game.zones.filter((z) => z.temps > 0);
+
+        if (joueur.aura) {
+          for (const ennemi of game.ennemis) {
+            if (ennemi.retirer) continue;
+            const dist = Math.hypot(ennemi.x - joueur.x, ennemi.y - joueur.y);
+            if (dist < joueur.aura.rayon) {
+              infligerDegats(ennemi, joueur.aura.degats * dt);
+            }
+          }
+        }
+
+        for (const effet of game.effets) {
+          effet.temps -= dt;
+        }
+        game.effets = game.effets.filter((e) => e.temps > 0);
+
+        for (const ennemi of game.ennemis) {
+          if (ennemi.retirer) continue;
+          if (ennemi.stun > 0) {
+            ennemi.stun -= dt;
+            continue;
+          }
+          const dx = joueur.x - ennemi.x;
+          const dy = joueur.y - ennemi.y;
+          const dist = Math.hypot(dx, dy);
+          const vitesse = (ennemi.vitesse || 80) * dt;
+          if (dist > 2) {
+            ennemi.x += (dx / (dist || 1)) * vitesse;
+            ennemi.y += (dy / (dist || 1)) * vitesse;
+          }
+          if (dist < 28) {
+            if (joueur.invulnerable <= 0) {
+              joueur.pv -= ennemi.degats * dt;
+              audio.play(120, 0.1, "square");
+              joueur.invulnerable = 0.4;
+              if (joueur.pv <= 0) {
+                finRun(false);
+              }
+            }
+          }
+        }
+        game.ennemis = game.ennemis.filter((e) => !e.retirer);
+      }
+      function finRun(victoire) {
+        game.running = false;
+        game.state = "resume";
+        resumePanel.classList.remove("hidden");
+        const hero = game.hero;
+        const score = Math.floor(game.score + game.kills * 12 + game.temps * 2);
+        if (score > highscoreData.score) {
+          highscoreData.score = score;
+          highscoreData.detail = `${hero.nom} — ${game.biome.nom} — seed ${game.seed}`;
+          localStorage.setItem("goat_survivors_highscore_v2", JSON.stringify(highscoreData));
+          updateHighscoreText();
+        }
+        document.getElementById("resume-title").textContent = victoire ? "Victoire caprine !" : "Défaite";
+        document.getElementById("resume-body").innerHTML = `
+          <p>Score : <strong>${score.toLocaleString("fr-FR")}</strong></p>
+          <p>Temps : ${(game.temps / 60).toFixed(2)} min</p>
+          <p>XP total : ${Math.floor(game.xp)}</p>
+          <p>Ennemis vaincus : ${game.kills}</p>
+          <p>Seed : ${game.seed}</p>
+        `;
+      }
+
+      function render() {
+        ctx.save();
+        ctx.fillStyle = game.biome.couleur;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        const joueur = game.player;
+        const offsetX = joueur ? -joueur.x : 0;
+        const offsetY = joueur ? -joueur.y : 0;
+        ctx.translate(offsetX, offsetY);
+        ctx.font = "28px 'Noto Color Emoji', 'Apple Color Emoji', sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        for (const orb of game.xpOrbs) {
+          ctx.fillText(orb.emoji, orb.x, orb.y);
+        }
+        for (const zone of game.zones) {
+          ctx.fillStyle = "rgba(247,179,43,0.15)";
+          ctx.beginPath();
+          ctx.arc(zone.x, zone.y, zone.rayon || 60, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#fff";
+          ctx.fillText(zone.emoji || "✨", zone.x, zone.y);
+        }
+        for (const effet of game.effets) {
+          if (effet.type === "eclair") {
+            ctx.strokeStyle = "#80ffdb";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(effet.x1, effet.y1);
+            ctx.lineTo(effet.x2, effet.y2);
+            ctx.stroke();
+          }
+        }
+        for (const proj of game.projectiles) {
+          ctx.fillText(proj.emoji || "•", proj.x, proj.y);
+        }
+        for (const ennemi of game.ennemis) {
+          ctx.fillText(ennemi.emoji || "👾", ennemi.x, ennemi.y);
+        }
+        if (joueur) {
+          ctx.fillText(game.hero.emoji, joueur.x, joueur.y);
+          if (joueur.aura) {
+            ctx.strokeStyle = "rgba(255,255,255,0.4)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(joueur.x, joueur.y, joueur.aura.rayon, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+
+        afficherHUD();
+      }
+
+      function afficherHUD() {
+        hud.innerHTML = "";
+        const ligne1 = document.createElement("div");
+        ligne1.className = "hud-row";
+        const joueur = game.player;
+        if (joueur) {
+          ligne1.innerHTML = `PV ${joueur.pv.toFixed(0)} / ${joueur.pvMax}`;
+          const barre = document.createElement("div");
+          barre.className = "bar";
+          const fill = document.createElement("div");
+          fill.className = "bar-fill";
+          fill.style.width = `${Math.max(0, Math.min(1, joueur.pv / joueur.pvMax)) * 100}%`;
+          barre.appendChild(fill);
+          ligne1.appendChild(barre);
+        }
+        hud.appendChild(ligne1);
+
+        const ligne2 = document.createElement("div");
+        ligne2.className = "hud-row";
+        ligne2.textContent = `Niveau ${game.niveau} — XP ${Math.floor(game.xp)} / ${game.xpPourNiveau}`;
+        hud.appendChild(ligne2);
+
+        const ligne3 = document.createElement("div");
+        ligne3.className = "hud-row";
+        ligne3.textContent = `Temps : ${(game.temps / 60).toFixed(2)} min — Score : ${Math.floor(game.score).toLocaleString("fr-FR")}`;
+        hud.appendChild(ligne3);
+
+        const ligne4 = document.createElement("div");
+        ligne4.className = "hud-row";
+        ligne4.textContent = `Dashes : ${game.player ? `${game.player.dash}/${game.player.dashMax}` : 0}`;
+        hud.appendChild(ligne4);
+      }
+      function boucle(now) {
+        const dt = Math.min(0.05, (now - game.lastUpdate) / 1000);
+        game.lastUpdate = now;
+        update(dt);
+        render();
+        requestAnimationFrame(boucle);
+      }
+      requestAnimationFrame(boucle);
+    </script>
   </body>
 </html>

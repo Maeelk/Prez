@@ -1,77 +1,58 @@
-# Goat Survivors
+# Goat Survivors (édition monopage)
 
-Goat Survivors est un clone mono-page de Survivor-like jouable dans le navigateur. Tout le gameplay, les données et l'interface sont livrés en TypeScript (build Vite) avec rendu Canvas 2D.
+Goat Survivors est un mini survivor-like 100 % contenu dans un unique fichier `index.html`. Aucun build ni asset graphique externe
+n'est requis : toutes les entités sont rendues par des emojis ou des formes procédurales sur un canvas HTML5.
 
-## Fonctionnalités clés
+## Lancer le jeu
 
-- 4 héros chèvres jouables avec passifs distincts.
-- 12 armes évolutives et 8 passifs, alimentés par des fichiers JSON éditables dans `data/`.
-- Vagues d'ennemis progressives sur 7 minutes avec mini-boss et boss final.
-- Système ECS léger, gestion seedable via `SeededRandom`.
-- Sauvegarde locale du meilleur score et des options (audio, accessibilité, mode performance).
-- Support desktop (clavier) et mobile (stick virtuel + bouton Dash).
-- PWA simple (service worker + manifest) pour usage offline après premier chargement.
+1. Télécharger ou cloner le dépôt.
+2. Ouvrir `index.html` dans un navigateur moderne (Chrome, Edge, Firefox, Safari).
+3. Le jeu fonctionne hors-ligne après le premier chargement grâce au stockage local pour les options et le high score.
+
+## Fonctionnalités principales
+
+- **4 héros chèvres** avec passifs distincts (gain d'XP, aura de gel, tank, foudre).
+- **12 armes emblématiques** (Boule de feu Mario, Boomerang Zelda, Anneaux Sonic, etc.) et **8 passifs** disponibles lors des montées
+de niveau.
+- **Run de 7 minutes** avec pacing progressif, élites fréquents et trois boss déclenchés aux minutes 2:30, 5:00 et 7:00.
+- **Biomes procéduraux** (Alpage, Cimetière) comportant des hazards dynamiques (bourrasques, cloches étourdissantes).
+- **Contrôles desktop et mobile** : ZQSD/Flèches ou stick virtuel, dash sur Espace ou zone tactile dédiée.
+- **Accessibilité** : mode daltonisme, taille d'interface ajustable, mode performance, volume audio réglable.
+- **Sauvegarde locale** : options (`localStorage` clé `goat_survivors_options_v2`) et meilleur score (`goat_survivors_highscore_v2`).
 
 ## Structure du dépôt
 
 ```
-├── assets/ASSETS_TO_PRODUCE.txt   # liste exhaustive des assets attendus
-├── data/                          # JSON gameplay (héros, armes, ennemis...)
-├── public/                        # manifest + service worker
-├── src/                           # code TypeScript (ECS, logique jeu, UI)
-├── index.html                     # point d'entrée unique
-├── package.json                   # scripts npm
+├── index.html   # jeu complet (HTML + CSS + JS)
 └── README.md
 ```
 
-## Développement
+## Personnalisation rapide
 
-```bash
-npm install
-npm run dev
-```
+Le haut du script contient les définitions des héros, armes, passifs, biomes, vagues et boss. Pour ajuster l'équilibrage ou ajouter un
+contenu supplémentaire, modifier directement les objets JavaScript correspondants dans `index.html`.
 
-La page est accessible via `http://localhost:5173`. Pour un build de production :
-
-```bash
-npm run build
-npm run preview
-```
-
-## Données
-
-Toutes les valeurs d'équilibrage sont dans `data/`. Modifier un JSON ne nécessite pas de recompilation grâce au chargement dynamique.
-
-- `heroes.json` : stats de base et passifs.
-- `weapons.json` : armes, améliorations, évolutions.
-- `passives.json` : passifs in-run.
-- `ennemis.json` : trash/elites/boss.
-- `waves.json` : pacing et hazards par biome.
-- `xp_curve.json` : courbe de niveaux.
-
-## Contrôles
+## Contrôles détaillés
 
 | Plateforme | Contrôles |
 |------------|-----------|
-| Desktop    | ZQSD ou flèches pour se déplacer, `Espace` pour dash, `Échap` pour pause. |
-| Mobile     | Stick virtuel gauche, bouton Dash à droite. |
+| Desktop    | `ZQSD` ou flèches pour se déplacer • `Espace` pour dash • `P` pour pause |
+| Mobile     | Stick virtuel (gauche) • Tap sur le coin inférieur droit pour dash |
 
-Le tir est automatique, sans visée manuelle.
+Le tir et les effets sont automatiques en fonction des armes débloquées.
 
-## Accessibilité
+## Accessibilité et options
 
-- Mode daltonisme paramétrable.
-- Taille de police ajustable.
-- Réglage de l'intensité des effets et mode performance.
-- Volumes SFX/BGM indépendants.
+- **Mode daltonisme** : palette alternative en un clic.
+- **Taille UI** : curseur de 85 % à 125 %.
+- **Mode performance** : réduit la densité de spawn pour les appareils modestes.
+- **Volume global** : réglage entre 0 et 100 %, activation audio au premier input pour compatibilité mobile.
 
-## Offline
+## Données persistantes
 
-Un service worker (cache shell) est enregistré au chargement pour permettre une exécution offline après la première visite.
+- Supprimer ou réinitialiser les options via le bouton "Réinitialiser" du menu ou en vidant les clés de `localStorage`.
+- Les seeds de run sont affichées sur l'écran de fin pour rejouer un record.
 
-## Sauvegardes locales
+## Crédit
 
-- Options : `localStorage` clé `goat_survivors_options_v1`.
-- High score : `localStorage` clé `goat_survivors_highscore_v1`.
-
-Pour réinitialiser, supprimer les entrées correspondantes dans le stockage du navigateur.
+Jeu conçu pour démontrer un survivor-like "Goat Survivors" entièrement procédural, sans pipeline d'assets.
