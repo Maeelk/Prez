@@ -1,0 +1,51 @@
+[
+  {
+    "id": "alpine",
+    "nom": "Chèvre Alpine",
+    "description": "Polyvalente, gain d'XP accru.",
+    "pvMax": 120,
+    "vitesse": 160,
+    "passif": {
+      "type": "xp_bonus",
+      "valeur": 0.1
+    }
+  },
+  {
+    "id": "snow",
+    "nom": "Chèvre des Neiges",
+    "description": "Contrôle gelé périodique.",
+    "pvMax": 100,
+    "vitesse": 130,
+    "passif": {
+      "type": "gel_periodique",
+      "intervalle": 10,
+      "duree": 0.5,
+      "rayon": 140
+    }
+  },
+  {
+    "id": "combat",
+    "nom": "Bouc de Combat",
+    "description": "Brute résistante, dégâts mêlée.",
+    "pvMax": 160,
+    "vitesse": 150,
+    "passif": {
+      "type": "melee_bonus",
+      "degats": 0.15,
+      "portee": -0.1
+    }
+  },
+  {
+    "id": "electric",
+    "nom": "Chèvre Électrique",
+    "description": "Verre à canon rapide.",
+    "pvMax": 90,
+    "vitesse": 190,
+    "passif": {
+      "type": "chaine_pickup",
+      "intervalle": 5,
+      "rayon": 180,
+      "degats": 40
+    }
+  }
+]

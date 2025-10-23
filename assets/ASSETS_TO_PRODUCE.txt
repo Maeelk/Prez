@@ -1,0 +1,61 @@
+[HEROES]
+hero_alpine_walk_a.png 48x48 anchor(24,44) notes: cornes courtes, cape verte
+hero_alpine_walk_b.png 48x48 anchor(24,44) notes: jambe alternée, cape flottante
+hero_snow_walk_a.png 48x48 anchor(24,44) notes: pelage blanc, givre
+hero_snow_walk_b.png 48x48 anchor(24,44)
+hero_combat_walk_a.png 48x48 anchor(24,44) notes: armure bronze, épaulière gauche abîmée
+hero_combat_walk_b.png 48x48 anchor(24,44)
+hero_electric_walk_a.png 48x48 anchor(24,44) notes: éclairs bleus, cloche dorée
+hero_electric_walk_b.png 48x48 anchor(24,44)
+
+[MOBS]
+mob_bat.png 32x32 anchor(16,28) notes: ailes sombres, yeux rouges
+mob_rat.png 32x32 anchor(16,28) notes: queue longue, museau pointu
+mob_crow.png 32x32 anchor(16,28) notes: silhouette anguleuse
+mob_scarecrow.png 32x32 anchor(16,28) notes: chapeau, bras en bois
+mob_wisp.png 32x32 anchor(16,28) notes: lueur bleutée
+gelite_hunter.png 32x32 anchor(16,28) notes: posture de charge, lance
+elite_druid.png 32x32 anchor(16,28) notes: bâton racines
+elite_gargoyle.png 32x32 anchor(16,28) notes: ailes repliées, pierre sombre
+boss_wolf_count.png 64x64 anchor(32,56) notes: manteau pourpre
+boss_raven_queen.png 64x64 anchor(32,56) notes: couronne de plumes
+boss_bell_ancient.png 80x96 anchor(40,84) notes: cloche fissurée, chaînes
+boss_bell_ancient_telegraph.png 80x96 anchor(40,84) notes: teinte cyan, contour lumineux
+
+[WEAPONS]
+proj_mario_fire.png 16x16 anchor(8,12) palette: orange/jaune/rouge
+proj_zelda_boomerang.png 16x16 anchor(8,12) notes: forme boomerang dorée
+proj_sonic_ring.png 16x16 anchor(8,8) notes: anneau doré éclatant
+aura_sonic_collect.png 48x48 anchor(24,24) notes: halo bleu
+dash_trail_sonic.png 24x16 anchor(12,12) notes: arcs électriques
+whip_castlevania.png 32x8 anchor(0,4) notes: segments cuir
+proj_metroid_missile.png 16x16 anchor(8,12) palette: gris/vert
+slash_megaman.png 32x24 anchor(16,20) notes: arc cyan
+proj_sf_hadouken.png 20x20 anchor(10,14) notes: flamme bleue
+proj_doom_bfg.png 28x28 anchor(14,20) notes: noyau vert
+proj_tetris_block.png 16x16 anchor(8,12) variants: I,O,T,L,Z couleurs saturées
+aura_pacman.png 36x36 anchor(18,18) notes: morsures animées
+fx_diablo_battlecry.png 64x64 anchor(32,32) notes: rune rouge pulsante
+fx_levelup_flash.png 20x20 anchor(10,10) notes: éclat doré
+pickup_xp_orb.png 12x12 anchor(6,10) palette: vert/bleu selon valeur
+pickup_coin.png 12x12 anchor(6,10) notes: pièce laiton
+pickup_heal_herb.png 16x16 anchor(8,14) notes: bouquet vert
+
+[ENVIRONNEMENT]
+tile_alpage_ground.png 64x64 anchor(32,48) notes: herbe crépuscule
+tile_cimetiere_ground.png 64x64 anchor(32,48) notes: dalles pierre
+prop_alpage_tree.png 64x80 anchor(32,76) notes: sapin sombre
+prop_alpage_rock.png 48x36 anchor(24,32)
+prop_cimetiere_tomb.png 48x60 anchor(24,56)
+prop_cimetiere_cross.png 32x48 anchor(16,44)
+fx_wind_gust.png 64x32 anchor(32,28) notes: stries blanches
+aura_bell_stun.png 64x64 anchor(32,40) notes: onde circulaire
+
+[UI]
+ui_logo_title.png 256x128 anchor(128,96) notes: lettrage "Goat Survivors"
+ui_button.png 120x40 anchor(60,32)
+ui_panel.png 320x200 anchor(160,180)
+ui_icon_health.png 24x24 anchor(12,20)
+ui_icon_xp.png 24x24 anchor(12,20)
+ui_icon_gold.png 24x24 anchor(12,20)
+ui_icon_seed.png 24x24 anchor(12,20)

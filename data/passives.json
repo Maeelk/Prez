@@ -1,0 +1,11 @@
+[
+  {"id": "dommages_plus", "nom": "Cornes Trempées", "description": "+15 % dégâts.", "bonus": {"degats": 0.15}},
+  {"id": "cadence_plus", "nom": "Métronome Runique", "description": "-10 % recharge.", "bonus": {"cadence": 0.1}},
+  {"id": "portee_plus", "nom": "Longue Lanière", "description": "+20 % portée.", "bonus": {"portee": 0.2}},
+  {"id": "aimant_plus", "nom": "Cloche Magnétique", "description": "+40 % aimant XP.", "bonus": {"aimant": 0.4}},
+  {"id": "zone_plus", "nom": "Sabots Pyroclastiques", "description": "+25 % zone.", "bonus": {"zone": 0.25}},
+  {"id": "regen_plus", "nom": "Fromage Fortifiant", "description": "+0,5 PV/s.", "bonus": {"regen": 0.5}},
+  {"id": "vitesse_plus", "nom": "Cape Aérodynamique", "description": "+15 % vitesse.", "bonus": {"vitesse": 0.15}},
+  {"id": "controle_plus", "nom": "Rune de Contrôle", "description": "Effets de contrôle +30 %.", "bonus": {"controle": 0.3}},
+  {"id": "electrique_plus", "nom": "Batterie Caprine", "description": "+30 % dégâts électriques.", "bonus": {"electricite": 0.3}}
+]
