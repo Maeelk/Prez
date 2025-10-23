@@ -1,0 +1,278 @@
+[
+  {
+    "id": "mario_fireball",
+    "nom": "Boule de Feu \"Mario\"",
+    "type": "projectile_arc",
+    "cooldownMs": 1200,
+    "degats": 22,
+    "vitesseProj": 320,
+    "pierce": 1,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"degats": 4},
+      {"quantite": 1},
+      {"cooldownMs": -150},
+      {"pierce": 1},
+      {"aire": 0.2}
+    ],
+    "evolution": {
+      "nom": "Mario-Lave",
+      "passifRequis": "zone_plus",
+      "bonus": {"traineeLave": true}
+    }
+  },
+  {
+    "id": "zelda_boomerang",
+    "nom": "Boomerang \"Zelda\"",
+    "type": "projectile_retour",
+    "cooldownMs": 1400,
+    "degats": 18,
+    "vitesseProj": 360,
+    "pierce": 1,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"degats": 3},
+      {"quantite": 1},
+      {"cooldownMs": -150},
+      {"pierce": 1},
+      {"aire": 0.15}
+    ],
+    "evolution": {
+      "nom": "Boomerang Double",
+      "passifRequis": "portee_plus",
+      "bonus": {"double": true}
+    }
+  },
+  {
+    "id": "sonic_rings",
+    "nom": "Anneaux \"Sonic\"",
+    "type": "orbite_collecte",
+    "cooldownMs": 0,
+    "degats": 10,
+    "vitesseProj": 0,
+    "pierce": 999,
+    "quantite": 3,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"quantite": 1},
+      {"degats": 3},
+      {"aimant": 0.4},
+      {"quantite": 1},
+      {"degats": 4}
+    ],
+    "evolution": {
+      "nom": "Hyper Anneaux",
+      "passifRequis": "aimant_plus",
+      "bonus": {"ramassageGlobal": true}
+    }
+  },
+  {
+    "id": "sonic_dash",
+    "nom": "Spin Dash \"Sonic\"",
+    "type": "dash",
+    "cooldownMs": 6000,
+    "degats": 55,
+    "vitesseProj": 0,
+    "pierce": 6,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"cooldownMs": -600},
+      {"degats": 8},
+      {"pierce": 4},
+      {"cooldownMs": -600},
+      {"degats": 10}
+    ],
+    "evolution": {
+      "nom": "Super Spin",
+      "passifRequis": "vitesse_plus",
+      "bonus": {"sillage": true}
+    }
+  },
+  {
+    "id": "castlevania_whip",
+    "nom": "Fouet \"Castlevania\"",
+    "type": "fouet",
+    "cooldownMs": 700,
+    "degats": 20,
+    "vitesseProj": 0,
+    "pierce": 1,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"degats": 4},
+      {"aire": 0.2},
+      {"cooldownMs": -80},
+      {"degats": 5},
+      {"aire": 0.25}
+    ],
+    "evolution": {
+      "nom": "Fouet Jumeau",
+      "passifRequis": "dommages_plus",
+      "bonus": {"double": true, "saignement": true}
+    }
+  },
+  {
+    "id": "metroid_missiles",
+    "nom": "Missiles \"Metroid\"",
+    "type": "projectile_homing",
+    "cooldownMs": 2200,
+    "degats": 30,
+    "vitesseProj": 280,
+    "pierce": 1,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"degats": 6},
+      {"quantite": 1},
+      {"cooldownMs": -200},
+      {"degats": 6},
+      {"quantite": 1}
+    ],
+    "evolution": {
+      "nom": "Super Missiles",
+      "passifRequis": "cadence_plus",
+      "bonus": {"salve": 3}
+    }
+  },
+  {
+    "id": "megaman_blade",
+    "nom": "Lame Énergie \"Mega Man\"",
+    "type": "slash_arc",
+    "cooldownMs": 900,
+    "degats": 26,
+    "vitesseProj": 0,
+    "pierce": 3,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"degats": 5},
+      {"pierce": 2},
+      {"cooldownMs": -120},
+      {"degats": 5},
+      {"aire": 0.2}
+    ],
+    "evolution": {
+      "nom": "Tempête X",
+      "passifRequis": "zone_plus",
+      "bonus": {"rotation360": true}
+    }
+  },
+  {
+    "id": "streetfighter_hadouken",
+    "nom": "Hadouken \"Street Fighter\"",
+    "type": "projectile_ligne",
+    "cooldownMs": 950,
+    "degats": 24,
+    "vitesseProj": 520,
+    "pierce": 1,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"degats": 6},
+      {"pierce": 1},
+      {"cooldownMs": -140},
+      {"degats": 6},
+      {"vitesseProj": 80}
+    ],
+    "evolution": {
+      "nom": "Shinku Hadouken",
+      "passifRequis": "dommages_plus",
+      "bonus": {"large": true}
+    }
+  },
+  {
+    "id": "doom_bfg",
+    "nom": "BFG \"DOOM\"",
+    "type": "projectile_lent",
+    "cooldownMs": 5200,
+    "degats": 120,
+    "vitesseProj": 180,
+    "pierce": 9,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"degats": 20},
+      {"aire": 0.25},
+      {"cooldownMs": -400},
+      {"degats": 20},
+      {"quantite": 1}
+    ],
+    "evolution": {
+      "nom": "BFG-∞",
+      "passifRequis": "zone_plus",
+      "bonus": {"pulsation": true}
+    }
+  },
+  {
+    "id": "tetris_rain",
+    "nom": "Pluie de Blocs \"Tetris\"",
+    "type": "pluie_zone",
+    "cooldownMs": 2400,
+    "degats": 34,
+    "vitesseProj": 0,
+    "pierce": 6,
+    "quantite": 3,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"quantite": 1},
+      {"degats": 6},
+      {"cooldownMs": -200},
+      {"aire": 0.25},
+      {"degats": 8}
+    ],
+    "evolution": {
+      "nom": "Tetris T-Spin",
+      "passifRequis": "controle_plus",
+      "bonus": {"densite": 2}
+    }
+  },
+  {
+    "id": "pacman_chomp",
+    "nom": "Chomp \"Pac-Man\"",
+    "type": "aura_proche",
+    "cooldownMs": 0,
+    "degats": 18,
+    "vitesseProj": 0,
+    "pierce": 999,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"degats": 4},
+      {"aire": 0.2},
+      {"degats": 4},
+      {"aire": 0.2},
+      {"degats": 5}
+    ],
+    "evolution": {
+      "nom": "Super Chomp",
+      "passifRequis": "regen_plus",
+      "bonus": {"vitesse": 2, "soin": 0.5}
+    }
+  },
+  {
+    "id": "diablo_battlecry",
+    "nom": "Cri de Bataille \"Diablo\"",
+    "type": "buff_rythme",
+    "cooldownMs": 16000,
+    "degats": 0,
+    "vitesseProj": 0,
+    "pierce": 0,
+    "quantite": 1,
+    "niveauMax": 5,
+    "ameliorations": [
+      {"duree": 1},
+      {"cadence": 0.05},
+      {"vitesse": 0.05},
+      {"duree": 1},
+      {"cadence": 0.05}
+    ],
+    "evolution": {
+      "nom": "Cri des Anciens",
+      "passifRequis": "electrique_plus",
+      "bonus": {"chaine": true}
+    }
+  }
+]

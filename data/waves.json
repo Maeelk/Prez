@@ -1,0 +1,36 @@
+{
+  "biomes": [
+    {
+      "id": "alpage",
+      "nom": "Alpage Crépusculaire",
+      "description": "Terrain ouvert, bourrasques.",
+      "hazard": "bourrasque",
+      "events": [
+        {"minute": 1.5, "type": "vent", "duree": 6},
+        {"minute": 4.5, "type": "vent", "duree": 8}
+      ],
+      "vagues": [
+        {"debut": 0, "fin": 1.5, "composition": {"chauve_souris": 12, "rat": 6}},
+        {"debut": 1.5, "fin": 3, "composition": {"rat": 10, "corbeau": 8}},
+        {"debut": 3, "fin": 4.5, "composition": {"corbeau": 12, "epouvantail": 6}},
+        {"debut": 4.5, "fin": 7, "composition": {"epouvantail": 10, "feu_follet": 12}}
+      ]
+    },
+    {
+      "id": "cimetiere",
+      "nom": "Cimetière Roman",
+      "description": "Obstacles serrés, cloches étourdissantes.",
+      "hazard": "cloche",
+      "events": [
+        {"minute": 2, "type": "cloche", "duree": 5},
+        {"minute": 5.5, "type": "cloche", "duree": 7}
+      ],
+      "vagues": [
+        {"debut": 0, "fin": 1.5, "composition": {"rat": 12, "feu_follet": 6}},
+        {"debut": 1.5, "fin": 3.5, "composition": {"feu_follet": 10, "corbeau": 8}},
+        {"debut": 3.5, "fin": 5, "composition": {"corbeau": 12, "epouvantail": 8}},
+        {"debut": 5, "fin": 7, "composition": {"epouvantail": 12, "chauve_souris": 10}}
+      ]
+    }
+  ]
+}

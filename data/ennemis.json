@@ -1,0 +1,19 @@
+{
+  "trash": [
+    {"id": "chauve_souris", "nom": "Chauve-souris", "pv": 20, "degats": 10, "vitesse": 90, "xp": 3},
+    {"id": "rat", "nom": "Rat Fétide", "pv": 24, "degats": 12, "vitesse": 80, "xp": 3},
+    {"id": "corbeau", "nom": "Corbeau Veilleur", "pv": 28, "degats": 14, "vitesse": 110, "xp": 4},
+    {"id": "epouvantail", "nom": "Épouvantail Animé", "pv": 36, "degats": 16, "vitesse": 60, "xp": 5},
+    {"id": "feu_follet", "nom": "Feu follet", "pv": 18, "degats": 8, "vitesse": 130, "xp": 4}
+  ],
+  "elites": [
+    {"id": "chasseur", "nom": "Chasseur de Lune", "pv": 180, "degats": 32, "vitesse": 150, "xp": 25, "pattern": "charge"},
+    {"id": "druide", "nom": "Druide des Racines", "pv": 220, "degats": 20, "vitesse": 80, "xp": 28, "pattern": "racines"},
+    {"id": "gargouille", "nom": "Gargouille Animée", "pv": 260, "degats": 34, "vitesse": 120, "xp": 35, "pattern": "burst"}
+  ],
+  "boss": [
+    {"id": "comte_lupin", "nom": "Le Comte Lupin", "pv": 1200, "degats": 45, "vitesse": 140, "xp": 200, "minute": 2.5, "pattern": "croix"},
+    {"id": "reine_corneille", "nom": "La Reine Corneille", "pv": 2200, "degats": 55, "vitesse": 110, "xp": 250, "minute": 5, "pattern": "anneaux"},
+    {"id": "ancien_clocher", "nom": "L'Ancien Clocher", "pv": 3200, "degats": 65, "vitesse": 100, "xp": 500, "minute": 7, "pattern": "ondes"}
+  ]
+}
