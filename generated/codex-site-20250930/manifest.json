@@ -1,0 +1,16 @@
+{
+  "name": "SafeIntelligence Offline",
+  "short_name": "SafeIntelligence",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#3b64ff",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
